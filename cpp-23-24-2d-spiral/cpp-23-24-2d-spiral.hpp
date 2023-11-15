@@ -1,7 +1,7 @@
 int** MakeSpiral(int n) {
-  int **array = new int* [n];
+  int** array = new int*[n];
   for (int i = 0; i < n; ++i) {
-	array[i] = new int [n];
+	array[i] = new int[n];
   }
   int counter = 0;
   for (int it = 0; it < (n + 1) / 2; ++it) {
