@@ -1,7 +1,7 @@
 #pragma once
 
-#include <algorithm>
 #include <math.h>
+#include <algorithm>
 
 /*
  * Верните 0 если и только если треугольник невозможно построить
