@@ -2,7 +2,7 @@
 #include <valarray>
 
 std::pair<int, const int*> Range(int from, int to, int step = 1) {
-  if (from <= to && step <= 0 || from > to && step > 0) {
+  if (from <= to && step <= 0 || from > to && step >= 0) {
     return {};
   }
   int sz = (abs(to - from) + abs(step) - 1) / abs(step);
