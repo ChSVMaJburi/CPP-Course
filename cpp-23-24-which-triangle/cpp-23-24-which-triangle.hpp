@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <math.h>
 
 /*
  * Верните 0 если и только если треугольник невозможно построить
@@ -11,5 +12,29 @@
  */
 
 int WhichTriangle(int a, int b, int c) {
-
+  if (a > b) {
+    std::swap(a, b);
+  }
+  if (a > c) {
+    std::swap(a, c);
+    std::swap(b, c);
+  }
+  if (b > c) {
+    std::swap(b, c);
+  }
+  if (c > a + b) {
+    return 0;
+  }
+  if (c == a + b) {
+    return 1;
+  }
+  const double alpha = acos((c * c - a * a - b * b) * 1.0 / (-2 * b * a));
+  const double pi = acos(-1);
+  if (alpha < pi / 2) {
+    return 2;
+  }
+  if (alpha > pi / 2) {
+    return 4;
+  }
+  return 3;
 }
