@@ -29,7 +29,8 @@ int WhichTriangle(int a, int b, int c) {
   if (c == a + b) {
     return 1;
   }
-  const double alpha = acos((c * c - a * a - b * b) * 1.0 / (-2 * b * a));
+  const double alpha =
+      acos((1LL * c * c - 1LL * a * a - 1LL * b * b) * 1.0 / (-2LL * b * a));
   const double pi = acos(-1);
   if (alpha < pi / 2) {
     return 2;
