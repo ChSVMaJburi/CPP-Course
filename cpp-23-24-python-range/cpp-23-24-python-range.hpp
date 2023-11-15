@@ -13,7 +13,6 @@ std::pair<int, const int*> Range(int from, int to, int step = 1) {
       answer[counter++] = i;
     }
   } else {
-
     for (int i = from; i < to; i += step) {
       answer[counter++] = i;
     }
