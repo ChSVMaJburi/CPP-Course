@@ -27,6 +27,9 @@ class RingBuffer {
     }
     *element = arr_[left_];
     ++left_;
+    if (left_ == arr_.size()) {
+      left_ = 0;
+    }
     --size_;
     return true;
   }
