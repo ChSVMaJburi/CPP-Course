@@ -9,7 +9,7 @@ class RingBuffer {
 
   size_t Size() const { return size_; }
 
-  bool Empty() const { return size_ != 0; }
+  bool Empty() const { return size_ == 0; }
 
   bool TryPush(int element) {
     if (Size() == arr_.size()) {
