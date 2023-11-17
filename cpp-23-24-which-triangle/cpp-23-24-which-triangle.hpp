@@ -12,30 +12,30 @@
  * Верните 4 если и только если треугольник тупоугольный
  */
 
-int WhichTriangle(int a, int b, int c) {
-  if (a > b) {
-    std::swap(a, b);
-  }
+void MadeCMax(int& a, int& b, int& c) {
   if (a > c) {
     std::swap(a, c);
-    std::swap(b, c);
   }
   if (b > c) {
     std::swap(b, c);
   }
+}
+
+int WhichTriangle(int a, int b, int c) {
+  MadeCMax(a, b, c);
   if (c > a + b) {
     return 0;
   }
   if (c == a + b) {
     return 1;
   }
-  const double alpha =
+  const double kAlpha =
       acos((1LL * c * c - 1LL * a * a - 1LL * b * b) * 1.0 / (-2LL * b * a));
-  const double pi = acos(-1);
-  if (alpha < pi / 2) {
+  const double kPi = acos(-1);
+  if (kAlpha < kPi / 2) {
     return 2;
   }
-  if (alpha > pi / 2) {
+  if (kAlpha > kPi / 2) {
     return 4;
   }
   return 3;
