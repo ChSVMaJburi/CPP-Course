@@ -1,23 +1,23 @@
-int** MakeSpiral(int n) {
+int** MakeSpiral(unsigned int n) {
   int** array = new int*[n];
   for (int i = 0; i < n; ++i) {
     array[i] = new int[n];
   }
-  int counter = 0;
-  for (int it = 0; it < (n + 1) / 2; ++it) {
-    int l = it;
-    int r = n - it - 1;
-    for (int i = l; i < r + (l == r); ++i) {
-      array[l][i] = ++counter;
+  unsigned int counter = 0;
+  for (unsigned int it = 0; it < (n + 1) / 2; ++it) {
+    unsigned int left = it;
+    unsigned int right = n - it - 1;
+    for (unsigned int i = left; i < right + (left == right); ++i) {
+      array[left][i] = ++counter;
     }
-    for (int i = l; i < r; ++i) {
-      array[i][r] = ++counter;
+    for (unsigned int i = left; i < right; ++i) {
+      array[i][right] = ++counter;
     }
-    for (int i = r; i > l; --i) {
-      array[r][i] = ++counter;
+    for (unsigned int i = right; i > left; --i) {
+      array[right][i] = ++counter;
     }
-    for (int i = r; i > l; --i) {
-      array[i][l] = ++counter;
+    for (unsigned int i = right; i > left; --i) {
+      array[i][left] = ++counter;
     }
   }
   return array;
