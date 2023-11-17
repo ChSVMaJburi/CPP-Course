@@ -1,21 +1,18 @@
 #include <utility>
-#include <valarray>
+
+int Abs(int num) {
+  return (num > 0 ? num : -num);
+}
 
 std::pair<int, const int*> Range(int from, int to, int step = 1) {
   if (from <= to && step <= 0 || from > to && step >= 0) {
     return {};
   }
-  int sz = (abs(to - from) + abs(step) - 1) / abs(step);
+  unsigned int sz = (Abs(to - from) + Abs(step) - 1) / Abs(step);
   int* answer = new int[sz];
-  int counter = 0;
-  if (step < 0) {
-    for (int i = from; i > to; i += step) {
-      answer[counter++] = i;
-    }
-  } else {
-    for (int i = from; i < to; i += step) {
-      answer[counter++] = i;
-    }
+  unsigned int counter = 0;
+  for (int i = from; counter < sz; i += step) {
+    answer[counter++] = i;
   }
   return {sz, answer};
 }
