@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 
-std::vector<int> Factorize(unsigned int n) {
+std::vector<int> Factorize(int n) {
   std::vector<int> answer;
-  for (unsigned int i = 2; i * i <= n; ++i) {
+  for (unsigned int i = 2; i * i <= (unsigned int)n; ++i) {
     while (n % i == 0) {
       answer.push_back(i);
       n /= i;
