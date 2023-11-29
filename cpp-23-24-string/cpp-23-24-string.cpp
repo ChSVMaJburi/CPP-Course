@@ -126,17 +126,20 @@ String String::operator+(const String& other) const {
   third += *this;
   return third;
 }
+String& String::operator*=(unsigned int times) {
+  size_t old_size = size_;
+  size_ *= times;
+  Reserve(size_ + 1);
+  for (size_t i = old_size; i < size_; ++i) {
+    str_[i] = str_[i - old_size];
+  }
+  return *this;
+}
 String String::operator*(unsigned int times) const {
   String answer = *this;
-  size_t old_size = answer.size_;
-  answer.size_ *= times;
-  answer.Reserve(answer.size_ + 1);
-  for (size_t i = old_size; i < answer.size_; ++i) {
-    answer.str_[i] = answer.str_[i - old_size];
-  }
-  return answer;
+  return answer *= times;
 }
-std::vector<String> String::Split(const String& delim = " ") {
+std::vector<String> String::Split(const String& delim) {
   std::vector<String> ans;
   size_t sz = delim.Size();
   String cur;
