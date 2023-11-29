@@ -37,7 +37,7 @@ class String {
   bool operator>=(const String& other) const;
   bool operator!=(const String& other) const;
   String& operator+=(const String& other);
-  String operator+(const String& other);
+  String operator+(const String& other) const;
   String& operator*(unsigned int times);
   std::vector<String> Split(const String& delim);
   String Join(const std::vector<String>& strings);
