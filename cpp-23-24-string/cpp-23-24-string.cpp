@@ -83,7 +83,7 @@ char String::Back() const { return str_[size_ - 1]; }
 size_t String::Size() const { return size_; }
 bool String::Empty() const { return size_ == 0; }
 size_t String::Capacity() const { return capacity_; }
-const char* String::Data() { return str_; }
+const char* String::Data() const { return str_; }
 bool String::operator<(const String& other) const {
   size_t sz_min = std::min(size_, other.size_);
   for (size_t i = 0; i < sz_min; ++i) {
@@ -126,14 +126,15 @@ String String::operator+(const String& other) const {
   third += *this;
   return third;
 }
-String& String::operator*(unsigned int times) {
-  size_t old_size = size_;
-  size_ *= times;
-  Reserve(size_ + 1);
-  for (size_t i = old_size; i < size_; ++i) {
-    str_[i] = str_[i - old_size];
+String String::operator*(unsigned int times) const {
+  String answer = *this;
+  size_t old_size = answer.size_;
+  answer.size_ *= times;
+  answer.Reserve(answer.size_ + 1);
+  for (size_t i = old_size; i < answer.size_; ++i) {
+    answer.str_[i] = answer.str_[i - old_size];
   }
-  return *this;
+  return answer;
 }
 std::vector<String> String::Split(const String& delim = " ") {
   std::vector<String> ans;
