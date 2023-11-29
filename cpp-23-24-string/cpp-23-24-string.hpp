@@ -29,7 +29,7 @@ class String {
   size_t Size() const;
   bool Empty() const;
   size_t Capacity() const;
-  char*& Data();
+  const char* Data();
   bool operator<(const String& other) const;
   bool operator>(const String& other) const;
   bool operator==(const String& other) const;
@@ -37,7 +37,7 @@ class String {
   bool operator>=(const String& other) const;
   bool operator!=(const String& other) const;
   String& operator+=(const String& other);
-  String operator+(String other);
+  String operator+(const String& other);
   String& operator*(unsigned int times);
   std::vector<String> Split(const String& delim);
   String Join(const std::vector<String>& strings);

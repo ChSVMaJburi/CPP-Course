@@ -83,7 +83,7 @@ char String::Back() const { return str_[size_ - 1]; }
 size_t String::Size() const { return size_; }
 bool String::Empty() const { return size_ == 0; }
 size_t String::Capacity() const { return capacity_; }
-char*& String::Data() { return str_; }
+const char* String::Data() { return str_; }
 bool String::operator<(const String& other) const {
   size_t sz_min = std::min(size_, other.size_);
   for (size_t i = 0; i < sz_min; ++i) {
@@ -121,7 +121,11 @@ String& String::operator+=(const String& other) {
   }
   return *this;
 }
-String String::operator+(String other) { return other += *this; }
+String String::operator+(const String& other) const {
+  String third = other;
+  third += *this;
+  return third;
+}
 String& String::operator*(unsigned int times) {
   size_t old_size = size_;
   size_ *= times;
