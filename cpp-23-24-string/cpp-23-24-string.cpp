@@ -1,7 +1,9 @@
+#include "cpp-23-24-string.hpp"
+
+#include <string.h>
+
 #include <iostream>
 #include <vector>
-#include <string.h>
-#include "cpp-23-24-string.hpp"
 
 String::String() noexcept {
   capacity_ = 0;
@@ -23,12 +25,8 @@ String::String(const char* str) {
     str_[i] = str[i];
   }
 }
-String::String(const String& other): String(other.str_) {
-
-}
-String::~String() {
-  delete[] str_;
-}
+String::String(const String& other): String(other.str_) {}
+String::~String() { delete[] str_; }
 String& String::operator=(const String& other) {
   size_ = other.size_;
   capacity_ = other.capacity_;
@@ -39,9 +37,7 @@ String& String::operator=(const String& other) {
   }
   return *this;
 }
-void String::Clear() {
-  size_ = 0;
-}
+void String::Clear() { size_ = 0; }
 void String::PushBack(char character) {
   if (size_ + 1 == capacity_) {
     SetCapacity(capacity_ * 2);
@@ -69,44 +65,22 @@ void String::Reserve(size_t new_cap) {
     SetCapacity(new_cap);
   }
 }
-void String::ShrinkToFit() {
-  SetCapacity(size_);
-}
+void String::ShrinkToFit() { SetCapacity(size_); }
 void String::Swap(String& other) {
   String third = *this;
   *this = other;
   other = third;
 }
-char& String::operator[](size_t ind) {
-  return str_[ind];
-}
-char String::operator[](size_t ind) const {
-  return str_[ind];
-}
-char& String::Front() {
-  return str_[0];
-}
-char String::Front() const {
-  return str_[0];
-}
-char& String::Back() {
-  return str_[size_ - 1];
-}
-char String::Back() const {
-  return str_[size_ - 1];
-}
-size_t String::Size() const {
-  return size_;
-}
-bool String::Empty() const {
-  return size_ == 0;
-}
-size_t String::Capacity() const {
-  return capacity_;
-}
-char*& String::Data() {
-  return str_;
-}
+char& String::operator[](size_t ind) { return str_[ind]; }
+char String::operator[](size_t ind) const { return str_[ind]; }
+char& String::Front() { return str_[0]; }
+char String::Front() const { return str_[0]; }
+char& String::Back() { return str_[size_ - 1]; }
+char String::Back() const { return str_[size_ - 1]; }
+size_t String::Size() const { return size_; }
+bool String::Empty() const { return size_ == 0; }
+size_t String::Capacity() const { return capacity_; }
+char*& String::Data() { return str_; }
 bool String::operator<(const String& other) const {
   size_t sz_min = std::min(size_, other.size_);
   for (size_t i = 0; i < sz_min; ++i) {
@@ -118,9 +92,7 @@ bool String::operator<(const String& other) const {
   }
   return (sz_min == size_);
 }
-bool String::operator>(const String& other) const {
-  return other < *this;
-}
+bool String::operator>(const String& other) const { return other < *this; }
 bool String::operator==(const String& other) const {
   if (other.size_ != size_) {
     return false;
@@ -135,12 +107,8 @@ bool String::operator==(const String& other) const {
 bool String::operator<=(const String& other) const {
   return *this < other || *this == other;
 }
-bool String::operator>=(const String& other) const {
-  return other <= *this;
-}
-bool String::operator!=(const String& other) const {
-  return !(*this == other);
-}
+bool String::operator>=(const String& other) const { return other <= *this; }
+bool String::operator!=(const String& other) const { return !(*this == other); }
 String& String::operator+=(const String& other) {
   size_t old_size = size_;
   size_ += other.size_;
@@ -150,9 +118,7 @@ String& String::operator+=(const String& other) {
   }
   return *this;
 }
-String String::operator+(String other) {
-  return other += *this;
-}
+String String::operator+(String other) { return other += *this; }
 String& String::operator*(unsigned int times) {
   size_t old_size = size_;
   size_ *= times;

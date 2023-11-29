@@ -1,8 +1,8 @@
 #pragma once
 
+#include <cstring>
 #include <iostream>
 #include <vector>
-#include <cstring>
 
 class String {
  public:
