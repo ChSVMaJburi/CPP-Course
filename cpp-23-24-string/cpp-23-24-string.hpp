@@ -5,11 +5,6 @@
 #include <cstring>
 
 class String {
- private:
-  void SetCapacity(size_t new_cap);
-  char* str_;
-  size_t capacity_;
-  size_t size_;
  public:
   String() noexcept;
   String(size_t size, char character);
@@ -46,6 +41,12 @@ class String {
   String& operator*(unsigned int times);
   std::vector<String> Split(const String& delim);
   String Join(const std::vector<String>& strings);
+
+ private:
+  void SetCapacity(size_t new_cap);
+  char* str_;
+  size_t capacity_;
+  size_t size_;
 };
 
 std::ostream& operator<<(std::ostream& out, const String& str);
