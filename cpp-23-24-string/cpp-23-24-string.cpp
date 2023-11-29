@@ -22,7 +22,7 @@ String::String(const char* str) {
   if (str == nullptr) {
     return;
   }
-  Reserve(strlen(str) + 1);
+  SetCapacity(strlen(str) + 1);
   size_ = strlen(str);
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = str[i];
