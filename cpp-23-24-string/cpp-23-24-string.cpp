@@ -1,5 +1,3 @@
-//#include "cpp-23-24-string.hpp"
-
 #include <iostream>
 #include <vector>
 #include <string.h>
@@ -10,6 +8,7 @@ String::String() noexcept {
   size_ = 0;
   str_ = nullptr;
 }
+
 String::String(size_t size, char character) {
   size_ = size;
   Reserve(size_ + 1);
