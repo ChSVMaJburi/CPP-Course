@@ -42,7 +42,7 @@ String& String::operator=(const String& other) {
 }
 void String::Clear() { size_ = 0; }
 void String::PushBack(char character) {
-  if (size_ + 1 == capacity_) {
+  if (size_ + 1 >= capacity_) {
     SetCapacity(capacity_ * 2);
   }
   str_[size_++] = character;
