@@ -19,13 +19,16 @@ String::String(size_t size, char character) {
   }
 }
 String::String(const char* str) {
+  if (str == nullptr) {
+    return;
+  }
   Reserve(strlen(str) + 1);
   size_ = strlen(str);
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = str[i];
   }
 }
-String::String(const String& other): String(other.str_) {}
+String::String(const String& other) : String(other.str_) {}
 String::~String() { delete[] str_; }
 String& String::operator=(const String& other) {
   size_ = other.size_;
@@ -156,7 +159,7 @@ std::vector<String> String::Split(const String& delim = " ") {
   return ans;
 }
 String String::Join(const std::vector<String>& strings) {
-  String ans;
+  String ans = "";
   for (size_t i = 0; i < strings.size(); ++i) {
     ans += strings[i];
     if (i + 1 != strings.size()) {
