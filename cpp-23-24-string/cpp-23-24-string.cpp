@@ -1,13 +1,13 @@
 //#include "cpp-23-24-string.hpp"
-#pragma once
 
 #include <iostream>
 #include <vector>
 #include <string.h>
 #include "cpp-23-24-string.hpp"
 
-String::String() {
-  capacity_ = size_ = 0;
+String::String() noexcept {
+  capacity_ = 0;
+  size_ = 0;
   str_ = nullptr;
 }
 String::String(size_t size, char character) {
