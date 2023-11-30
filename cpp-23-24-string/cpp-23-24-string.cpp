@@ -115,8 +115,8 @@ bool String::operator>=(const String& other) const { return other <= *this; }
 bool String::operator!=(const String& other) const { return !(*this == other); }
 String& String::operator+=(const String& other) {
   size_t old_size = size_;
+  Reserve(size_ + other.size_ + 1);
   size_ += other.size_;
-  Reserve(size_ + 1);
   for (size_t i = old_size; i < size_; ++i) {
     str_[i] = other.str_[i - old_size];
   }
