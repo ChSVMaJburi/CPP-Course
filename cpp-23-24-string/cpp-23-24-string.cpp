@@ -12,8 +12,8 @@ String::String() noexcept {
 }
 
 String::String(size_t size, char character) {
+  SetCapacity(size + 1);
   size_ = size;
-  Reserve(size_ + 1);
   for (size_t i = 0; i < size; ++i) {
     str_[i] = character;
   }
