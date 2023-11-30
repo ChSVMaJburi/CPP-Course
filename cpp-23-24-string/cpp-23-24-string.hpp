@@ -41,13 +41,13 @@ class String {
   String operator*(unsigned int times) const;
   String& operator*=(unsigned int times);
   std::vector<String> Split(const String& delim = " ");
-  String Join(const std::vector<String>& strings);
+  String Join(const std::vector<String>& strings) const;
 
  private:
   void SetCapacity(size_t new_cap);
-  char* str_;
-  size_t capacity_;
-  size_t size_;
+  char* str_ = nullptr;
+  size_t capacity_ = 0;
+  size_t size_ = 0;
 };
 
 std::ostream& operator<<(std::ostream& out, const String& str);

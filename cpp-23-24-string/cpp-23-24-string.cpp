@@ -1,7 +1,5 @@
 #include "cpp-23-24-string.hpp"
 
-#include <string.h>
-
 #include <iostream>
 #include <vector>
 
@@ -31,6 +29,9 @@ String::String(const char* str) {
 String::String(const String& other) : String(other.str_) {}
 String::~String() { delete[] str_; }
 String& String::operator=(const String& other) {
+  if (&other == this) {
+    return *this;
+  }
   size_ = other.size_;
   capacity_ = other.capacity_;
   delete[] str_;
@@ -144,13 +145,13 @@ std::vector<String> String::Split(const String& delim) {
   size_t sz = delim.Size();
   String cur;
   for (size_t i = 0; i < size_; ++i) {
-    bool flag = 0;
+    bool flag = false;
     if (i + sz >= size_) {
-      flag = 1;
+      flag = true;
     } else {
       for (size_t j = 0; j < sz; ++j) {
         if (str_[i + j] != delim[j]) {
-          flag = 1;
+          flag = true;
           break;
         }
       }
@@ -166,7 +167,7 @@ std::vector<String> String::Split(const String& delim) {
   ans.push_back(cur);
   return ans;
 }
-String String::Join(const std::vector<String>& strings) {
+String String::Join(const std::vector<String>& strings) const {
   String ans = "";
   for (size_t i = 0; i < strings.size(); ++i) {
     ans += strings[i];
