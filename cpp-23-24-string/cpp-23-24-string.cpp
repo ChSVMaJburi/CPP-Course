@@ -123,8 +123,8 @@ String& String::operator+=(const String& other) {
   return *this;
 }
 String String::operator+(const String& other) const {
-  String third = other;
-  third += *this;
+  String third = *this;
+  third += other;
   return third;
 }
 String& String::operator*=(unsigned int times) {
