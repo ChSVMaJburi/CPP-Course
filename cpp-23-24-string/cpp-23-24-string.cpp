@@ -155,7 +155,7 @@ std::vector<String> String::Split(const String& delim) {
   String cur;
   for (size_t i = 0; i < size_; ++i) {
     bool flag = false;
-    if (i + sz >= size_) {
+    if (i + sz > size_) {
       flag = true;
     } else {
       for (size_t j = 0; j < sz; ++j) {
