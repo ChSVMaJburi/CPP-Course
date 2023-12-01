@@ -197,6 +197,7 @@ void String::SetCapacity(size_t new_cap) {
   for (size_t i = 0; i < size_; ++i) {
     other[i] = str_[i];
   }
+  delete[] str_;
   str_ = other;
   for (size_t i = size_; i < new_cap; ++i) {
     str_[i] = '\0';
