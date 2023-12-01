@@ -128,8 +128,8 @@ String String::operator+(const String& other) const {
 }
 String& String::operator*=(unsigned int times) {
   size_t old_size = size_;
+  Reserve(size_ * times + 1);
   size_ *= times;
-  Reserve(size_ + 1);
   for (size_t i = old_size; i < size_; ++i) {
     str_[i] = str_[i - old_size];
   }
