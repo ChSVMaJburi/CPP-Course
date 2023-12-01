@@ -32,6 +32,7 @@ String& String::operator=(const String& other) {
   if (&other == this) {
     return *this;
   }
+  size_ = 0;
   SetCapacity(other.capacity_);
   size_ = other.size_;
   for (size_t i = 0; i < size_; ++i) {
