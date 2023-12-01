@@ -40,12 +40,18 @@ String& String::operator=(const String& other) {
   }
   return *this;
 }
-void String::Clear() { size_ = 0; }
+void String::Clear() {
+  size_ = 0;
+  if (capacity_) {
+    str_[0] = '\0';
+  }
+}
 void String::PushBack(char character) {
   if (size_ + 1 >= capacity_) {
     SetCapacity(std::max(static_cast<size_t>(1), capacity_) * 2);
   }
   str_[size_++] = character;
+  str_[size_] = '\0';
 }
 void String::PopBack() {
   if (!Empty()) {
@@ -127,6 +133,10 @@ String String::operator+(const String& other) const {
   return third;
 }
 String& String::operator*=(unsigned int times) {
+  if (!times) {
+    *this = String();
+    return *this;
+  }
   size_t old_size = size_;
   Reserve(size_ * times + 1);
   size_ *= times;
@@ -177,6 +187,12 @@ String String::Join(const std::vector<String>& strings) const {
   return ans;
 }
 void String::SetCapacity(size_t new_cap) {
+  if (!new_cap) {
+    capacity_ = 0;
+    delete[] str_;
+    str_ = NULL;
+    return;
+  }
   char* other = new char[new_cap];
   for (size_t i = 0; i < size_; ++i) {
     other[i] = str_[i];
