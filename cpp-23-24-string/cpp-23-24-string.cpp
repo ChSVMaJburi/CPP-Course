@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
 
 String::String() noexcept {
   capacity_ = 0;
@@ -32,10 +33,8 @@ String& String::operator=(const String& other) {
   if (&other == this) {
     return *this;
   }
+  SetCapacity(other.capacity_);
   size_ = other.size_;
-  capacity_ = other.capacity_;
-  delete[] str_;
-  str_ = new char[capacity_];
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = other.str_[i];
   }
