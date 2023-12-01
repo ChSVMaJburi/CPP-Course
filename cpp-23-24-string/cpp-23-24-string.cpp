@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-#include <random>
 
 String::String() noexcept {
   capacity_ = 0;
