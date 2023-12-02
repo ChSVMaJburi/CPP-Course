@@ -33,6 +33,7 @@ class BigInt {
   BigInt operator++(int);
   BigInt& operator--();
   BigInt operator--(int);
+
  private:
   void NotMinusZero();
   std::pair<std::vector<short>, bool> GetDigits(int64_t num) const;

@@ -1,8 +1,6 @@
 #include "cpp-23-24-big-integer.hpp"
 
-BigInt::BigInt() {
-  digits_.push_back(0);
-}
+BigInt::BigInt() { digits_.push_back(0); }
 std::pair<std::vector<short>, bool> BigInt::GetDigits(int64_t num) const {
   std::vector<short> digits;
   bool negative = num < 0;
@@ -50,9 +48,7 @@ BigInt& BigInt::operator=(const BigInt& other) {
 bool BigInt::operator==(const BigInt& other) const {
   return digits_ == other.digits_ && other.negative_ == negative_;
 }
-bool BigInt::operator!=(const BigInt& other) const {
-  return !(*this == other);
-}
+bool BigInt::operator!=(const BigInt& other) const { return !(*this == other); }
 bool BigInt::operator<(const BigInt& other) const {
   if (negative_ && !other.negative_) {
     return true;
@@ -78,9 +74,7 @@ bool BigInt::operator<(const BigInt& other) const {
 bool BigInt::operator<=(const BigInt& other) const {
   return *this < other || *this == other;
 }
-bool BigInt::operator>(const BigInt& other) const {
-  return other < *this;
-}
+bool BigInt::operator>(const BigInt& other) const { return other < *this; }
 bool BigInt::operator>=(const BigInt& other) const {
   return *this > other || *this == other;
 }
@@ -174,7 +168,7 @@ BigInt& BigInt::operator-=(const BigInt& other_) {
     }
     ans.push_back(sum);
   }
-  while(ans.size() > 1 && ans.back() == 0) {
+  while (ans.size() > 1 && ans.back() == 0) {
     ans.pop_back();
   }
   reverse(ans.begin(), ans.end());
@@ -197,7 +191,7 @@ BigInt& BigInt::operator*=(const BigInt& other) {
     }
   }
   short add = 0;
-  for (auto& cur_num: ans) {
+  for (auto& cur_num : ans) {
     cur_num += add;
     add = cur_num / kTen;
     cur_num %= kTen;
@@ -251,7 +245,9 @@ BigInt BigInt::operator/(const BigInt& other) const {
   BigInt third = *this;
   return third /= other;
 }
-BigInt& BigInt::operator%=(const BigInt& other) { return *this -= *this / other * other; }
+BigInt& BigInt::operator%=(const BigInt& other) {
+  return *this -= *this / other * other;
+}
 BigInt BigInt::operator%(const BigInt& other) const {
   BigInt third = *this;
   return third %= other;
