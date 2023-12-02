@@ -216,6 +216,9 @@ BigInt& BigInt::operator/=(const BigInt& other_) {
   }
   bool ans_negative = other.negative_ ^ negative_;
   other.negative_ = negative_ = false;
+  if (*this < other_) {
+    return *this = 0;
+  }
   BigInt ans = 0;
   BigInt cur_num = 0;
   for (size_t i = 0; i + 1 < other.digits_.size(); ++i) {
