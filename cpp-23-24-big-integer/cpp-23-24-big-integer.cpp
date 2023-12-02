@@ -5,13 +5,12 @@ BigInt::BigInt() {
 }
 std::pair<std::vector<short>, bool> BigInt::GetDigits(int64_t num) const {
   std::vector<short> digits;
-  bool negative = false;
-  if (num < 0) {
-    negative = true;
-    num = -num;
-  }
+  bool negative = num < 0;
   while (num != 0) {
     digits.push_back(num % kTen);
+    if (digits.back() < 0) {
+      digits.back() *= -1;
+    }
     num /= kTen;
   }
   if (digits.empty()) {
@@ -33,6 +32,9 @@ BigInt::BigInt(const std::string& str) {
   }
   for (size_t i = start; i < str.size(); ++i) {
     digits_.push_back(str[i] - '0');
+  }
+  if (digits_.size() == 1 && digits_.back() == 0) {
+    negative_ = false;
   }
 }
 BigInt::BigInt(const BigInt& other) {
@@ -127,9 +129,7 @@ BigInt& BigInt::operator+=(const BigInt& other_) {
 }
 BigInt BigInt::operator+(const BigInt& other) const {
   BigInt third = *this;
-  third += other;
-  third.NotMinusZero();
-  return third;
+  return third += other;
 }
 BigInt& BigInt::operator-() {
   negative_ ^= 1;
@@ -152,7 +152,10 @@ BigInt& BigInt::operator-=(const BigInt& other_) {
     return *this;
   }
   if (*this < other) {
-    return -(other - *this);
+    *this = -(other - *this);
+    negative_ ^= ans_neg;
+    NotMinusZero();
+    return *this;
   }
   bool del = false;
   std::vector<short> ans;
@@ -182,9 +185,7 @@ BigInt& BigInt::operator-=(const BigInt& other_) {
 }
 BigInt BigInt::operator-(const BigInt& other) const {
   BigInt third = *this;
-  third -= other;
-  third.NotMinusZero();
-  return third;
+  return third -= other;
 }
 BigInt& BigInt::operator*=(const BigInt& other) {
   size_t size1 = digits_.size();
@@ -192,7 +193,7 @@ BigInt& BigInt::operator*=(const BigInt& other) {
   std::vector<short> ans(size1 + size2);
   for (size_t i = 0; i < size1; ++i) {
     for (size_t j = 0; j < size2; ++j) {
-      ans[i + j] += digits_[size1 - i] * other.digits_[size2 - j];
+      ans[i + j] += digits_[size1 - 1 - i] * other.digits_[size2 - 1 - j];
     }
   }
   short add = 0;
@@ -201,7 +202,7 @@ BigInt& BigInt::operator*=(const BigInt& other) {
     add = cur_num / kTen;
     cur_num %= kTen;
   }
-  if (ans.size() > 1 && ans.back() == 0) {
+  while (ans.size() > 1 && ans.back() == 0) {
     ans.pop_back();
   }
   reverse(ans.begin(), ans.end());
@@ -212,8 +213,7 @@ BigInt& BigInt::operator*=(const BigInt& other) {
 }
 BigInt BigInt::operator*(const BigInt& other) const {
   BigInt third = *this;
-  third *= other;
-  return third;
+  return third *= other;
 }
 BigInt& BigInt::operator/=(const BigInt& other_) {
   BigInt other = other_;
@@ -224,7 +224,7 @@ BigInt& BigInt::operator/=(const BigInt& other_) {
   other.negative_ = negative_ = false;
   BigInt ans = 0;
   BigInt cur_num = 0;
-  for (size_t i = 0; i + 2 < other.digits_.size(); ++i) {
+  for (size_t i = 0; i + 1 < other.digits_.size(); ++i) {
     cur_num = cur_num * kTen + digits_[i];
   }
   for (size_t i = other.digits_.size() - 1; i < digits_.size(); ++i) {
@@ -249,8 +249,12 @@ BigInt& BigInt::operator/=(const BigInt& other_) {
 }
 BigInt BigInt::operator/(const BigInt& other) const {
   BigInt third = *this;
-  third /= other;
-  return third;
+  return third /= other;
+}
+BigInt& BigInt::operator%=(const BigInt& other) { return *this -= *this / other * other; }
+BigInt BigInt::operator%(const BigInt& other) const {
+  BigInt third = *this;
+  return third %= other;
 }
 BigInt& BigInt::operator++() { return (*this += 1); }
 BigInt BigInt::operator++(int) { return ++(*this) - 1; }

@@ -27,6 +27,8 @@ class BigInt {
   BigInt operator*(const BigInt& other) const;
   BigInt& operator/=(const BigInt& other);
   BigInt operator/(const BigInt& other) const;
+  BigInt& operator%=(const BigInt& other);
+  BigInt operator%(const BigInt& other) const;
   BigInt& operator++();
   BigInt operator++(int);
   BigInt& operator--();
