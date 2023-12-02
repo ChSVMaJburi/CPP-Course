@@ -212,7 +212,7 @@ BigInt BigInt::operator*(const BigInt& other) const {
 BigInt& BigInt::operator/=(const BigInt& other_) {
   BigInt other = other_;
   if (other == 0) {
-    throw std::runtime_error("Деление на ноль");
+    throw std::runtime_error("Division by zero");
   }
   bool ans_negative = other.negative_ ^ negative_;
   other.negative_ = negative_ = false;
