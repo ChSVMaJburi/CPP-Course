@@ -165,7 +165,7 @@ String String::operator+(const String& other) const {
 }
 
 String& String::operator*=(unsigned int times) {
-  if (times != 0) {
+  if (times == 0) {
     *this = String();
     return *this;
   }
