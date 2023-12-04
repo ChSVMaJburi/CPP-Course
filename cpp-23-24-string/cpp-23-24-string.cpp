@@ -1,8 +1,5 @@
 #include "cpp-23-24-string.hpp"
 
-#include <iostream>
-#include <vector>
-
 String::String() noexcept = default;
 
 String::String(size_t size, char character) {
@@ -50,7 +47,7 @@ void String::Clear() {
 
 void String::PushBack(char character) {
   if (size_ + 1 >= capacity_) {
-    SetCapacity(std::max(1ull, capacity_) * 2);
+    SetCapacity(std::max<size_t>(1, capacity_) * 2);
   }
   str_[size_++] = character;
   str_[size_] = '\0';
