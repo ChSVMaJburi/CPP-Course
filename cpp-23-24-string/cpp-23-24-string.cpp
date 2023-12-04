@@ -35,6 +35,7 @@ String& String::operator=(const String& other) {
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = other.str_[i];
   }
+  str_[size_] = '\0';
   return *this;
 }
 
@@ -235,7 +236,9 @@ void String::SetCapacity(size_t new_cap) {
   }
   delete[] str_;
   str_ = other;
-  str_[size_] = '\0';
+  for (size_t i = size_; i < new_cap; ++i) {
+    str_[i] = '\0';
+  }
   capacity_ = new_cap;
 }
 
