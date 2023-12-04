@@ -238,10 +238,10 @@ void String::SetCapacity(size_t new_cap) {
   }
   delete[] str_;
   str_ = other;
+  capacity_ = new_cap;
   for (size_t i = size_; i < capacity_; ++i) {
     str_[i] = '\0';
   }
-  capacity_ = new_cap;
 }
 
 std::ostream& operator<<(std::ostream& out, const String& str) {
