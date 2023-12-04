@@ -30,12 +30,6 @@ class String {
   bool Empty() const;
   size_t Capacity() const;
   const char* Data() const;
-  bool operator<(const String& other) const;
-  bool operator>(const String& other) const;
-  bool operator==(const String& other) const;
-  bool operator<=(const String& other) const;
-  bool operator>=(const String& other) const;
-  bool operator!=(const String& other) const;
   String& operator+=(const String& other);
   String operator+(const String& other) const;
   String operator*(unsigned int times) const;
@@ -49,6 +43,13 @@ class String {
   size_t capacity_ = 0;
   size_t size_ = 0;
 };
+
+bool operator<(const String& first, const String& second);
+bool operator<=(const String& first, const String& second);
+bool operator>(const String& first, const String& second);
+bool operator>=(const String& first, const String& second);
+bool operator==(const String& first, const String& second);
+bool operator!=(const String& first, const String& second);
 
 std::ostream& operator<<(std::ostream& out, const String& str);
 std::istream& operator>>(std::istream& in, String& str);
