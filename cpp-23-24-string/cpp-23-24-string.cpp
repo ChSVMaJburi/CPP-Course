@@ -35,7 +35,9 @@ String& String::operator=(const String& other) {
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = other.str_[i];
   }
-  str_[size_] = '\0';
+  if (str_) {
+    str_[size_] = '\0';
+  }
   return *this;
 }
 
@@ -169,11 +171,11 @@ String& String::operator*=(unsigned int times) {
     *this = String();
     return *this;
   }
-  size_t old_size = size_;
+  const size_t kSize = size_;
   Reserve(size_ * times + 1);
   size_ *= times;
-  for (size_t i = old_size; i < size_; ++i) {
-    str_[i] = str_[i - old_size];
+  for (size_t i = kSize; i < size_; ++i) {
+    str_[i] = str_[i - kSize];
   }
   str_[size_] = '\0';
   return *this;
