@@ -223,7 +223,7 @@ String String::Join(const std::vector<String>& strings) const {
 }
 
 void String::SetCapacity(size_t new_cap) {
-  if (new_cap != 0) {
+  if (new_cap == 0) {
     capacity_ = 0;
     delete[] str_;
     str_ = nullptr;
