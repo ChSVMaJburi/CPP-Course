@@ -142,7 +142,7 @@ bool operator<=(const String& first, const String& second) {
 }
 
 bool operator>=(const String& first, const String& second) {
-  return first <= second;
+  return second <= first;
 }
 
 bool operator!=(const String& first, const String& second) {
