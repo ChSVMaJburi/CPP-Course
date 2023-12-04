@@ -154,7 +154,7 @@ String& String::operator+=(const String& other) {
   Reserve(size_ + other.size_ + 1);
   size_ += other.Size();
   for (size_t i = kSize; i < size_; ++i) {
-    str_[i] = other.str_[i - kSize];
+    str_[i] = other[i - kSize];
   }
   str_[size_] = '\0';
   return *this;
