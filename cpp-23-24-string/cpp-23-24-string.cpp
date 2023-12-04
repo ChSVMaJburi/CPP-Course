@@ -3,11 +3,7 @@
 #include <iostream>
 #include <vector>
 
-String::String() noexcept {
-  capacity_ = 0;
-  size_ = 0;
-  str_ = nullptr;
-}
+String::String() noexcept = default;
 
 String::String(size_t size, char character) {
   SetCapacity(size + 1);
@@ -16,6 +12,7 @@ String::String(size_t size, char character) {
     str_[i] = character;
   }
 }
+
 String::String(const char* str) {
   if (str == nullptr) {
     return;
@@ -26,8 +23,11 @@ String::String(const char* str) {
     str_[i] = str[i];
   }
 }
+
 String::String(const String& other) : String(other.str_) {}
+
 String::~String() { delete[] str_; }
+
 String& String::operator=(const String& other) {
   if (&other == this) {
     return *this;
@@ -40,28 +40,35 @@ String& String::operator=(const String& other) {
   }
   return *this;
 }
+
 void String::Clear() {
   size_ = 0;
-  if (capacity_) {
+  if (capacity_ != 0) {
     str_[0] = '\0';
   }
 }
+
 void String::PushBack(char character) {
   if (size_ + 1 >= capacity_) {
-    SetCapacity(std::max(static_cast<size_t>(1), capacity_) * 2);
+    SetCapacity(std::max(1ull, capacity_) * 2);
   }
   str_[size_++] = character;
   str_[size_] = '\0';
 }
+
 void String::PopBack() {
   if (!Empty()) {
     --size_;
+    str_[size_] = '\0';
   }
 }
+
 void String::Resize(size_t new_size) {
   Reserve(new_size + 1);
   size_ = new_size;
+  str_[size_] = '\0';
 }
+
 void String::Resize(size_t new_size, char character) {
   size_t old_size = size_;
   Resize(new_size);
@@ -69,71 +76,98 @@ void String::Resize(size_t new_size, char character) {
     str_[i] = character;
   }
 }
+
 void String::Reserve(size_t new_cap) {
   if (new_cap > capacity_) {
     SetCapacity(new_cap);
   }
 }
+
 void String::ShrinkToFit() { SetCapacity(size_); }
+
 void String::Swap(String& other) {
-  String third = *this;
-  *this = other;
-  other = third;
+  std::swap(capacity_, other.capacity_);
+  std::swap(size_, other.size_);
+  std::swap(str_, other.str_);
 }
+
 char& String::operator[](size_t ind) { return str_[ind]; }
+
 char String::operator[](size_t ind) const { return str_[ind]; }
+
 char& String::Front() { return str_[0]; }
+
 char String::Front() const { return str_[0]; }
+
 char& String::Back() { return str_[size_ - 1]; }
+
 char String::Back() const { return str_[size_ - 1]; }
+
 size_t String::Size() const { return size_; }
+
 bool String::Empty() const { return size_ == 0; }
+
 size_t String::Capacity() const { return capacity_; }
+
 const char* String::Data() const { return str_; }
-bool String::operator<(const String& other) const {
-  size_t sz_min = std::min(size_, other.size_);
+
+bool operator<(const String& first, const String& second) {
+  size_t sz_min = std::min(first.Size(), second.Size());
   for (size_t i = 0; i < sz_min; ++i) {
-    if (str_[i] < other.str_[i]) {
-      return true;
-    } else if (str_[i] > other.str_[i]) {
-      return false;
+    if (first[i] != second[i]) {
+      return first[i] < second[i];
     }
   }
-  return (sz_min == size_);
+  return (sz_min == first.Size());
 }
-bool String::operator>(const String& other) const { return other < *this; }
-bool String::operator==(const String& other) const {
-  if (other.size_ != size_) {
+
+bool operator>(const String& first, const String& second) {
+  return second < first;
+}
+
+bool operator==(const String& first, const String& second) {
+  if (first.Size() != second.Size()) {
     return false;
   }
-  for (size_t i = 0; i < size_; ++i) {
-    if (str_[i] != other.str_[i]) {
+  for (size_t i = 0; i < first.Size(); ++i) {
+    if (first[i] != second[i]) {
       return false;
     }
   }
   return true;
 }
-bool String::operator<=(const String& other) const {
-  return *this < other || *this == other;
+
+bool operator<=(const String& first, const String& second) {
+  return first < second || first == second;
 }
-bool String::operator>=(const String& other) const { return other <= *this; }
-bool String::operator!=(const String& other) const { return !(*this == other); }
+
+bool operator>=(const String& first, const String& second) {
+  return first <= second;
+}
+
+bool operator!=(const String& first, const String& second) {
+  return !(first == second);
+}
+
 String& String::operator+=(const String& other) {
-  size_t old_size = size_;
+  const size_t kSize = size_;
   Reserve(size_ + other.size_ + 1);
-  size_ += other.size_;
-  for (size_t i = old_size; i < size_; ++i) {
-    str_[i] = other.str_[i - old_size];
+  size_ += other.Size();
+  for (size_t i = kSize; i < size_; ++i) {
+    str_[i] = other.str_[i - kSize];
   }
+  str_[size_] = '\0';
   return *this;
 }
+
 String String::operator+(const String& other) const {
   String third = *this;
   third += other;
   return third;
 }
+
 String& String::operator*=(unsigned int times) {
-  if (!times) {
+  if (times != 0) {
     *this = String();
     return *this;
   }
@@ -143,22 +177,25 @@ String& String::operator*=(unsigned int times) {
   for (size_t i = old_size; i < size_; ++i) {
     str_[i] = str_[i - old_size];
   }
+  str_[size_] = '\0';
   return *this;
 }
+
 String String::operator*(unsigned int times) const {
   String answer = *this;
   return answer *= times;
 }
+
 std::vector<String> String::Split(const String& delim) {
   std::vector<String> ans;
-  size_t sz = delim.Size();
+  const size_t kSize = delim.Size();
   String cur;
   for (size_t i = 0; i < size_; ++i) {
     bool flag = false;
-    if (i + sz > size_) {
+    if (i + kSize > size_) {
       flag = true;
     } else {
-      for (size_t j = 0; j < sz; ++j) {
+      for (size_t j = 0; j < kSize; ++j) {
         if (str_[i + j] != delim[j]) {
           flag = true;
           break;
@@ -168,7 +205,7 @@ std::vector<String> String::Split(const String& delim) {
     if (!flag) {
       ans.push_back(cur);
       cur.Clear();
-      i += sz - 1;
+      i += kSize - 1;
     } else {
       cur.PushBack(str_[i]);
     }
@@ -176,8 +213,9 @@ std::vector<String> String::Split(const String& delim) {
   ans.push_back(cur);
   return ans;
 }
+
 String String::Join(const std::vector<String>& strings) const {
-  String ans = "";
+  String ans;
   for (size_t i = 0; i < strings.size(); ++i) {
     ans += strings[i];
     if (i + 1 != strings.size()) {
@@ -186,11 +224,12 @@ String String::Join(const std::vector<String>& strings) const {
   }
   return ans;
 }
+
 void String::SetCapacity(size_t new_cap) {
-  if (!new_cap) {
+  if (new_cap != 0) {
     capacity_ = 0;
     delete[] str_;
-    str_ = NULL;
+    str_ = nullptr;
     return;
   }
   char* other = new char[new_cap];
@@ -199,17 +238,17 @@ void String::SetCapacity(size_t new_cap) {
   }
   delete[] str_;
   str_ = other;
-  for (size_t i = size_; i < new_cap; ++i) {
-    str_[i] = '\0';
-  }
+  str_[size_] = '\0';
   capacity_ = new_cap;
 }
+
 std::ostream& operator<<(std::ostream& out, const String& str) {
   for (size_t i = 0; i < str.Size(); ++i) {
     out << str[i];
   }
   return out;
 }
+
 std::istream& operator>>(std::istream& in, String& str) {
   str.Clear();
   char character;
