@@ -8,6 +8,7 @@ String::String(size_t size, char character) {
   for (size_t i = 0; i < size; ++i) {
     str_[i] = character;
   }
+  str_[size] = '\0';
 }
 
 String::String(const char* str) {
