@@ -155,7 +155,7 @@ bool operator!=(const String& first, const String& second) {
 
 String& String::operator+=(const String& other) {
   const size_t kSize = size_;
-  Reserve(size_ + other.size_ + 1);
+  Reserve(size_ + other.Size() + 1);
   size_ += other.Size();
   for (size_t i = kSize; i < size_; ++i) {
     str_[i] = other[i - kSize];
@@ -164,9 +164,9 @@ String& String::operator+=(const String& other) {
   return *this;
 }
 
-String String::operator+(const String& other) const {
-  String third = *this;
-  third += other;
+String operator+(const String& first, const String& second) {
+  String third = first;
+  third += second;
   return third;
 }
 
@@ -185,8 +185,8 @@ String& String::operator*=(unsigned int times) {
   return *this;
 }
 
-String String::operator*(unsigned int times) const {
-  String answer = *this;
+String operator*(const String& first, unsigned int times) {
+  String answer = first;
   return answer *= times;
 }
 
