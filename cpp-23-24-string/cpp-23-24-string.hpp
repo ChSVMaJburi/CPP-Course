@@ -32,8 +32,6 @@ class String {
   size_t Capacity() const;
   const char* Data() const;
   String& operator+=(const String& other);
-  String operator+(const String& other) const;
-  String operator*(unsigned int times) const;
   String& operator*=(unsigned int times);
   std::vector<String> Split(const String& delim = " ");
   String Join(const std::vector<String>& strings) const;
@@ -51,6 +49,8 @@ bool operator>(const String& first, const String& second);
 bool operator>=(const String& first, const String& second);
 bool operator==(const String& first, const String& second);
 bool operator!=(const String& first, const String& second);
+String operator+(const String& first, const String& second);
+String operator*(const String& first, unsigned int times);
 
 std::ostream& operator<<(std::ostream& out, const String& str);
 std::istream& operator>>(std::istream& in, String& str);
