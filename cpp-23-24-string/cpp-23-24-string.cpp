@@ -3,7 +3,7 @@
 String::String() noexcept = default;
 
 String::String(size_t size, char character) {
-  SetCapacity(size + 1);
+  SetCapacity(size);
   size_ = size;
   for (size_t i = 0; i < size; ++i) {
     str_[i] = character;
@@ -15,7 +15,7 @@ String::String(const char* str) {
   if (str == nullptr) {
     return;
   }
-  SetCapacity(strlen(str) + 1);
+  SetCapacity(strlen(str));
   size_ = strlen(str);
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = str[i];
@@ -53,7 +53,7 @@ void String::Clear() {
 }
 
 void String::PushBack(char character) {
-  if (size_ + 1 >= capacity_) {
+  if (size_ == capacity_) {
     SetCapacity(std::max<size_t>(1, capacity_) * 2);
   }
   str_[size_++] = character;
@@ -236,7 +236,7 @@ void String::SetCapacity(size_t new_cap) {
     str_ = nullptr;
     return;
   }
-  char* other = new char[new_cap];
+  char* other = new char[new_cap + 1];
   for (size_t i = 0; i < size_; ++i) {
     other[i] = str_[i];
   }
