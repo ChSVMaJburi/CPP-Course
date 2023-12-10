@@ -21,7 +21,7 @@ String::String(const char* str) {
   }
 }
 
-String::String(const String& other) : String(other.str_) {}
+String::String(const String& other) : String(other.Data()) {}
 
 String::~String() { delete[] str_; }
 
@@ -35,7 +35,7 @@ String& String::operator=(const String& other) {
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = other.str_[i];
   }
-  if (str_) {
+  if (str_ != nullptr) {
     str_[size_] = '\0';
   }
   return *this;
@@ -239,9 +239,7 @@ void String::SetCapacity(size_t new_cap) {
   delete[] str_;
   str_ = other;
   capacity_ = new_cap;
-  for (size_t i = size_; i < capacity_; ++i) {
-    str_[i] = '\0';
-  }
+  str_[size_] = '\0';
 }
 
 std::ostream& operator<<(std::ostream& out, const String& str) {
