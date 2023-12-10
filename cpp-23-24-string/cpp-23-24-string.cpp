@@ -19,6 +19,9 @@ String::String(const char* str) {
   for (size_t i = 0; i < size_; ++i) {
     str_[i] = str[i];
   }
+  if (str_ != nullptr) {
+    str_[size_] = '\0';
+  }
 }
 
 String::String(const String& other) : String(other.Data()) {}
