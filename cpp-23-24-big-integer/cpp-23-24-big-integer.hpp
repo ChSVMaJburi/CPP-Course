@@ -7,16 +7,10 @@
 class BigInt {
  public:
   BigInt();
-  BigInt(const int64_t& num);
+  BigInt(int64_t num);
   BigInt(const std::string&);
   BigInt(const BigInt& other);
   ~BigInt();
-  bool operator==(const BigInt& other) const;
-  bool operator!=(const BigInt& other) const;
-  bool operator<(const BigInt& other) const;
-  bool operator<=(const BigInt& other) const;
-  bool operator>(const BigInt& other) const;
-  bool operator>=(const BigInt& other) const;
   BigInt& operator=(const BigInt& other);
   BigInt& operator-();
   BigInt& operator+=(const BigInt& other);
@@ -35,13 +29,20 @@ class BigInt {
   BigInt operator--(int);
 
  private:
-  void NotMinusZero();
-  std::pair<std::vector<short>, bool> GetDigits(int64_t num) const;
-  std::vector<short> digits_;
-  bool negative_ = 0;
-  const short kTen = 10;
-  const short kMinDigit = 0;
-  const short kMaxDigit = 9;
+  void Update();
+  unsigned char GetDigit(size_t index) const;
+  std::vector<unsigned char> digits_;
+  bool negative_ = false;
+  const unsigned char kMod = 100;
+  const unsigned char kMinDigit = 0;
+  const unsigned char kMaxDigit = 9;
   friend std::istream& operator>>(std::istream& in, BigInt& num);
   friend std::ostream& operator<<(std::ostream& out, const BigInt& num);
+  friend bool operator==(const BigInt& cur, const BigInt& other);
+  friend bool operator<(const BigInt& cur, const BigInt& other);
 };
+bool operator==(const BigInt& cur, const BigInt& other);
+bool operator!=(const BigInt& cur, const BigInt& other);
+bool operator<=(const BigInt& cur, const BigInt& other);
+bool operator>(const BigInt& cur, const BigInt& other);
+bool operator>=(const BigInt& cur, const BigInt& other);

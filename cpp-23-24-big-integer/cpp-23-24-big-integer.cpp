@@ -1,43 +1,39 @@
 #include "cpp-23-24-big-integer.hpp"
 
-BigInt::BigInt() { digits_.push_back(0); }
-std::pair<std::vector<short>, bool> BigInt::GetDigits(int64_t num) const {
-  std::vector<short> digits;
-  bool negative = num < 0;
+BigInt::BigInt() : digits_{0} {}
+
+BigInt::BigInt(int64_t num) {
+  negative_ = num < 0;
+  num *= (num < 0 ? -1 : 1);
   while (num != 0) {
-    digits.push_back(num % kTen);
-    if (digits.back() < 0) {
-      digits.back() *= -1;
-    }
-    num /= kTen;
+    digits_.push_back(num % kMod);
+    num /= kMod;
   }
-  if (digits.empty()) {
-    digits.push_back(0);
+  if (digits_.empty()) {
+    digits_.push_back(0);
   }
-  reverse(digits.begin(), digits.end());
-  return {digits, negative};
+  Update();
 }
-BigInt::BigInt(const int64_t& num) {
-  auto digits = GetDigits(num);
-  negative_ = digits.second;
-  digits_ = digits.first;
-}
-BigInt::BigInt(const std::string& str) {
-  size_t start = 0;
+
+BigInt::BigInt(const std::string& str) { size_t start = 0;
   if (str[0] == '-') {
     negative_ = true;
     start = 1;
   }
-  for (size_t i = start; i < str.size(); ++i) {
-    digits_.push_back(str[i] - '0');
+  for (int i = str.size(); i >= start; --i) {
+    if ((str.size() - i) % 2 == 1) {
+      digits_.back() += (str[i] - '0') * 10;
+    } else {
+      digits_.push_back(str[i] - '0');
+    }
+    if (i == 0) {
+      break;
+    }
   }
-  if (digits_.size() == 1 && digits_.back() == 0) {
-    negative_ = false;
-  }
+  Update();
 }
-BigInt::BigInt(const BigInt& other) {
-  digits_ = other.digits_;
-  negative_ = other.negative_;
+BigInt::BigInt(const BigInt& other) : digits_(other.digits_), negative_(other.negative_) {
+
 }
 BigInt::~BigInt() = default;
 BigInt& BigInt::operator=(const BigInt& other) {
@@ -45,40 +41,41 @@ BigInt& BigInt::operator=(const BigInt& other) {
   negative_ = other.negative_;
   return *this;
 }
-bool BigInt::operator==(const BigInt& other) const {
-  return digits_ == other.digits_ && other.negative_ == negative_;
+bool operator==(const BigInt& cur, const BigInt& other) {
+  return cur.digits_ == other.digits_ && other.negative_ == cur.negative_;
 }
-bool BigInt::operator!=(const BigInt& other) const { return !(*this == other); }
-bool BigInt::operator<(const BigInt& other) const {
-  if (negative_ && !other.negative_) {
+bool operator!=(const BigInt& cur, const BigInt& other) {
+  return !(cur == other);
+}
+bool operator<(const BigInt& cur, const BigInt& other) {
+  if (cur.negative_ && !other.negative_) {
     return true;
   }
-  if (!negative_ && other.negative_) {
+  if (!cur.negative_ && other.negative_) {
     return false;
   }
-  if (negative_ && other.negative_) {
-    BigInt this_ = *this;
-    BigInt other_ = other;
-    other_.negative_ = false;
-    this_.negative_ = false;
-    return other_ < this_;
+  bool flag = (cur.negative_ && other.negative_);
+  if (cur.digits_.size() != other.digits_.size()) {
+    return (cur.digits_.size() > other.digits_.size()) & flag;
   }
-  if (digits_.size() < other.digits_.size()) {
-    return true;
+  for (int i = cur.digits_.size() - 1; i >= 0; --i) {
+    if (cur.digits_[i] != other.digits_[i]) {
+      return cur.digits_[i] < other.digits_[i];
+    }
   }
-  if (digits_.size() > other.digits_.size()) {
-    return false;
+  return false;
+}
+bool operator<=(const BigInt& cur, const BigInt& other) {
+  return cur < other || cur == other;
+}
+bool operator>(const BigInt& cur, const BigInt& other) { return other < cur; }
+bool operator>=(const BigInt& cur, const BigInt& other) {
+  return cur > other || cur == other;
+}
+void BigInt::Update() {
+  while (digits_.size() > 1 && digits_.back() == 0) {
+    digits_.pop_back();
   }
-  return digits_ < other.digits_;
-}
-bool BigInt::operator<=(const BigInt& other) const {
-  return *this < other || *this == other;
-}
-bool BigInt::operator>(const BigInt& other) const { return other < *this; }
-bool BigInt::operator>=(const BigInt& other) const {
-  return *this > other || *this == other;
-}
-void BigInt::NotMinusZero() {
   if (digits_.size() == 1 && digits_[0] == 0) {
     negative_ = false;
   }
@@ -95,30 +92,29 @@ BigInt& BigInt::operator+=(const BigInt& other_) {
     other.negative_ = false;
     *this -= other;
     negative_ ^= ans_neg;
-    NotMinusZero();
+    Update();
     return *this;
   }
   size_t size_mx = std::max(other.digits_.size(), digits_.size());
   bool add = false;
-  std::vector<short> ans;
+  std::vector<unsigned char> ans;
   for (size_t i = 0; i < size_mx; ++i) {
-    short sum = add;
+    unsigned char sum = add;
     if (i < digits_.size()) {
-      sum += digits_[digits_.size() - 1 - i];
+      sum += digits_[i];
     }
     if (i < other.digits_.size()) {
-      sum += other.digits_[other.digits_.size() - 1 - i];
+      sum += other.digits_[i];
     }
-    ans.push_back(sum % kTen);
-    add = sum / kTen;
+    ans.push_back(sum % kMod);
+    add = sum / kMod;
   }
   if (add) {
     ans.push_back(add);
   }
-  reverse(ans.begin(), ans.end());
   digits_ = ans;
   negative_ ^= ans_neg;
-  NotMinusZero();
+  Update();
   return *this;
 }
 BigInt BigInt::operator+(const BigInt& other) const {
@@ -127,7 +123,7 @@ BigInt BigInt::operator+(const BigInt& other) const {
 }
 BigInt& BigInt::operator-() {
   negative_ ^= 1;
-  NotMinusZero();
+  Update();
   return *this;
 }
 BigInt& BigInt::operator-=(const BigInt& other_) {
@@ -142,19 +138,19 @@ BigInt& BigInt::operator-=(const BigInt& other_) {
     other.negative_ = false;
     *this += other;
     negative_ ^= ans_neg;
-    NotMinusZero();
+    Update();
     return *this;
   }
   if (*this < other) {
     *this = -(other - *this);
     negative_ ^= ans_neg;
-    NotMinusZero();
+    Update();
     return *this;
   }
   bool del = false;
-  std::vector<short> ans;
+  std::vector<unsigned char> ans;
   for (size_t i = 0; i < digits_.size(); ++i) {
-    short sum = digits_[digits_.size() - 1 - i];
+    char sum = digits_[i];
     if (del) {
       --sum;
       del = false;
@@ -163,18 +159,14 @@ BigInt& BigInt::operator-=(const BigInt& other_) {
       sum -= other.digits_[other.digits_.size() - 1 - i];
     }
     if (sum < 0) {
-      sum += kTen;
+      sum += kMod;
       del = true;
     }
     ans.push_back(sum);
   }
-  while (ans.size() > 1 && ans.back() == 0) {
-    ans.pop_back();
-  }
-  reverse(ans.begin(), ans.end());
   digits_ = ans;
   negative_ ^= ans_neg;
-  NotMinusZero();
+  Update();
   return *this;
 }
 BigInt BigInt::operator-(const BigInt& other) const {
@@ -184,25 +176,24 @@ BigInt BigInt::operator-(const BigInt& other) const {
 BigInt& BigInt::operator*=(const BigInt& other) {
   size_t size1 = digits_.size();
   size_t size2 = other.digits_.size();
-  std::vector<short> ans(size1 + size2);
+  std::vector<unsigned short> ans(size1 + size2);
   for (size_t i = 0; i < size1; ++i) {
     for (size_t j = 0; j < size2; ++j) {
-      ans[i + j] += digits_[size1 - 1 - i] * other.digits_[size2 - 1 - j];
+      ans[i + j] += static_cast<unsigned short>(digits_[i]) * other.digits_[j];
     }
   }
-  short add = 0;
+  unsigned char add = 0;
   for (auto& cur_num : ans) {
     cur_num += add;
-    add = cur_num / kTen;
-    cur_num %= kTen;
+    add = cur_num / kMod;
+    cur_num %= kMod;
   }
-  while (ans.size() > 1 && ans.back() == 0) {
-    ans.pop_back();
-  }
-  reverse(ans.begin(), ans.end());
   negative_ ^= other.negative_;
-  digits_ = ans;
-  NotMinusZero();
+  digits_.resize(ans.size());
+  for (size_t i = 0; i < ans.size(); ++i) {
+    digits_[i] = ans[i];
+  }
+  Update();
   return *this;
 }
 BigInt BigInt::operator*(const BigInt& other) const {
@@ -222,14 +213,14 @@ BigInt& BigInt::operator/=(const BigInt& other_) {
   BigInt ans = 0;
   BigInt cur_num = 0;
   for (size_t i = 0; i + 1 < other.digits_.size(); ++i) {
-    cur_num = cur_num * kTen + digits_[i];
+    cur_num = cur_num * kMod + digits_[i];
   }
   for (size_t i = other.digits_.size() - 1; i < digits_.size(); ++i) {
-    cur_num = cur_num * kTen + digits_[i];
-    short left = kMinDigit;
-    short right = kMaxDigit;
+    cur_num = cur_num * kMod + digits_[i];
+    unsigned char left = kMinDigit;
+    unsigned char right = kMaxDigit;
     while (left < right) {
-      short mid = (left + right + 1) >> 1;
+      unsigned char mid = (left + right + 1) >> 1;
       if (other * mid <= cur_num) {
         left = mid;
       } else {
@@ -241,7 +232,7 @@ BigInt& BigInt::operator/=(const BigInt& other_) {
   }
   ans.negative_ = ans_negative;
   *this = ans;
-  NotMinusZero();
+  Update();
   return *this;
 }
 BigInt BigInt::operator/(const BigInt& other) const {
