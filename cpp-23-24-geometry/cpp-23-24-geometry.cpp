@@ -85,8 +85,8 @@ void Segment::Move(const Vector& vec) {
 }
 
 bool Segment::ContainsPoint(const Point& my_point) const {
-  return this->GetDirection() ^
-             Segment(this->begin_, my_point).GetDirection() &&
+  return (this->GetDirection() ^
+             Segment(this->begin_, my_point).GetDirection()) == 0 &&
          this->begin_.GetX() <= my_point.GetX() &&
          my_point.GetX() <= this->end_.GetX() &&
          this->begin_.GetY() <= my_point.GetY() &&
