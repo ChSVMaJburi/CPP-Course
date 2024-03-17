@@ -109,8 +109,9 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
       other_vector ^ Vector(this->GetB().GetX() - my_segment.GetA().GetX(),
                             this->GetB().GetY() - my_segment.GetA().GetY());
   int64_t other_cross_this_end =
-      other_vector ^ Vector(my_segment.GetB().GetX() - my_segment.GetA().GetX(),
-                            my_segment.GetB().GetY() - my_segment.GetA().GetY());
+      other_vector ^
+      Vector(my_segment.GetB().GetX() - my_segment.GetA().GetX(),
+             my_segment.GetB().GetY() - my_segment.GetA().GetY());
 
   return this_cross_other_start * this_cross_other_end <= 0 &&
          other_cross_this_start * other_cross_this_end <= 0;
