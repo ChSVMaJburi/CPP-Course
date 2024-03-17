@@ -58,15 +58,15 @@ bool operator==(const Point& first, const Point& second) {
   return first.GetX() == second.GetX() && first.GetY() == second.GetY();
 }
 
-void Point::Move(const Vector& vec) {
-  this->coord_x_ += vec.GetX();
-  this->coord_y_ += vec.GetY();
+void Point::Move(const Vector& my_vector) {
+  this->coord_x_ += my_vector.GetX();
+  this->coord_y_ += my_vector.GetY();
 }
 bool Point::ContainsPoint(const Point& my_point) const {
   return *this == my_point;
 }
-bool Point::CrossSegment(const Segment& my_seg) const {
-  return my_seg.ContainsPoint(*this);
+bool Point::CrossSegment(const Segment& my_segment) const {
+  return my_segment.ContainsPoint(*this);
 }
 IShape* Point::Clone() const { return new Point(GetX(), GetY()); }
 
@@ -79,42 +79,40 @@ Vector Segment::GetDirection() const {
   return this->end_.ToVector() - this->begin_.ToVector();
 }
 
-void Segment::Move(const Vector& vec) {
-  this->begin_.Move(vec);
-  this->end_.Move(vec);
+void Segment::Move(const Vector& my_vector) {
+  this->begin_.Move(my_vector);
+  this->end_.Move(my_vector);
 }
 
 bool Segment::ContainsPoint(const Point& my_point) const {
   return (this->GetDirection() ^
-             Segment(this->begin_, my_point).GetDirection()) == 0 &&
+          Segment(this->begin_, my_point).GetDirection()) == 0 &&
          this->begin_.GetX() <= my_point.GetX() &&
          my_point.GetX() <= this->end_.GetX() &&
          this->begin_.GetY() <= my_point.GetY() &&
          my_point.GetY() <= this->end_.GetY();
 }
-bool Segment::CrossSegment(const Segment& other) const {
-  Vector thisVector(this->GetB().GetX() - this->GetA().GetX(),
-                    this->GetB().GetY() - this->GetA().GetY());
-  Vector otherVector(other.GetB().GetX() - other.GetA().GetX(),
-                     other.GetB().GetY() - other.GetA().GetY());
+bool Segment::CrossSegment(const Segment& my_segment) const {
+  Vector this_vector(this->GetB().GetX() - this->GetA().GetX(),
+                     this->GetB().GetY() - this->GetA().GetY());
+  Vector other_vector(my_segment.GetB().GetX() - my_segment.GetA().GetX(),
+                      my_segment.GetB().GetY() - my_segment.GetA().GetY());
 
-  Vector thisToOther(this->GetA().GetX() - other.GetA().GetX(),
-                     this->GetA().GetY() - other.GetA().GetY());
+  Vector this_to_other(this->GetA().GetX() - my_segment.GetA().GetX(),
+                       this->GetA().GetY() - my_segment.GetA().GetY());
 
-  int64_t thisCrossOtherStart = thisVector ^ thisToOther;
-  int64_t thisCrossOtherEnd =
-      thisVector ^ Vector(other.GetB().GetX() - this->GetA().GetX(),
-                          other.GetB().GetY() - this->GetA().GetY());
-  int64_t otherCrossThisStart =
-      otherVector ^ Vector(this->GetB().GetX() - other.GetA().GetX(),
-                           this->GetB().GetY() - other.GetA().GetY());
-  int64_t otherCrossThisEnd =
-      otherVector ^ Vector(other.GetB().GetX() - other.GetA().GetX(),
-                           other.GetB().GetY() - other.GetA().GetY());
+  int64_t this_cross_other_start = this_vector ^ this_to_other;
+  int64_t this_cross_other_end =
+      this_vector ^ Vector(my_segment.GetB().GetX() - this->GetA().GetX(),
+                           my_segment.GetB().GetY() - this->GetA().GetY());
+  int64_t other_cross_this_start =
+      other_vector ^ Vector(this->GetB().GetX() - my_segment.GetA().GetX(),
+                            this->GetB().GetY() - my_segment.GetA().GetY());
+  int64_t other_cross_this_end =
+      other_vector ^ Vector(my_segment.GetB().GetX() - my_segment.GetA().GetX(),
+                            my_segment.GetB().GetY() - my_segment.GetA().GetY());
 
-  return thisCrossOtherStart * thisCrossOtherEnd <= 0 &&
-         otherCrossThisStart * otherCrossThisEnd <= 0;
+  return this_cross_other_start * this_cross_other_end <= 0 &&
+         other_cross_this_start * other_cross_this_end <= 0;
 }
-IShape* Segment::Clone() const {
-  return new Segment(begin_, end_);
-}
+IShape* Segment::Clone() const { return new Segment(begin_, end_); }
