@@ -29,9 +29,9 @@ class Segment;
 
 class IShape {
  public:
-  virtual void Move(const Vector&) = 0;
-  virtual bool ContainsPoint(const Point&) const = 0;
-  virtual bool CrossSegment(const Segment&) const = 0;
+  virtual void Move(const Vector& my_vector) = 0;
+  virtual bool ContainsPoint(const Point& my_point) const = 0;
+  virtual bool CrossSegment(const Segment& my_segment) const = 0;
   virtual IShape* Clone() const = 0;
   virtual ~IShape() = default;
 };
@@ -44,9 +44,9 @@ class Point : public IShape {
   int64_t GetY() const;
   Vector ToVector() const;
 
-  void Move(const Vector&) override;
-  bool ContainsPoint(const Point&) const override;
-  bool CrossSegment(const Segment&) const override;
+  void Move(const Vector& my_vector) override;
+  bool ContainsPoint(const Point& my_point) const override;
+  bool CrossSegment(const Segment& my_segment) const override;
   IShape* Clone() const override;
 
  private:
@@ -64,9 +64,9 @@ class Segment : public IShape {
   Point GetB() const;
   Vector GetDirection() const;
 
-  void Move(const Vector&) override;
-  bool ContainsPoint(const Point&) const override;
-  bool CrossSegment(const Segment&) const override;
+  void Move(const Vector& my_vector) override;
+  bool ContainsPoint(const Point& my_point) const override;
+  bool CrossSegment(const Segment& my_segment) const override;
   IShape* Clone() const override;
 
  private:
