@@ -1,4 +1,9 @@
 #include <cstdint>
+
+namespace Aminov {
+const int64_t kVeryBig = 1e9 + 7;
+}
+
 class Vector {
  public:
   Vector(int64_t coord_x, int64_t coord_y);
@@ -62,7 +67,7 @@ class Segment : public IShape {
 
   Point GetA() const;
   Point GetB() const;
-  Vector GetDirection() const;
+  Vector GetVector() const;
 
   void Move(const Vector& my_vector) override;
   bool ContainsPoint(const Point& my_point) const override;
@@ -72,4 +77,57 @@ class Segment : public IShape {
  private:
   Point begin_;
   Point end_;
+};
+
+class Line : public IShape {
+ public:
+  Line(Point begin, const Point& end);
+
+  int64_t GetA() const;
+  int64_t GetB() const;
+  int64_t GetC() const;
+  Vector GetVector() const;
+
+  void Move(const Vector& my_vector) override;
+  bool ContainsPoint(const Point& my_point) const override;
+  bool CrossSegment(const Segment& my_segment) const override;
+  IShape* Clone() const override;
+
+ private:
+  Point begin_;
+  Vector direction_;
+};
+
+class Ray : public IShape {
+ public:
+  Ray(Point begin, const Point& end);
+
+  Point GetA() const;
+  Vector GetVector() const;
+
+  void Move(const Vector& my_vector) override;
+  bool ContainsPoint(const Point& my_point) const override;
+  bool CrossSegment(const Segment& my_segment) const override;
+  IShape* Clone() const override;
+
+ private:
+  Point begin_;
+  Vector direction_;
+};
+
+class Circle : public IShape {
+ public:
+  Circle(Point center, std::size_t radius);
+
+  Point GetCentre() const;
+  std::size_t GetRadius() const;
+
+  void Move(const Vector& my_vector) override;
+  bool ContainsPoint(const Point& my_point) const override;
+  bool CrossSegment(const Segment& my_segment) const override;
+  IShape* Clone() const override;
+
+ private:
+  Point center_;
+  std::size_t radius_;
 };

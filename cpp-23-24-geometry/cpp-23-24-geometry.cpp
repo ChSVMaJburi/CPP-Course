@@ -1,5 +1,6 @@
 #include "cpp-23-24-geometry.hpp"
 
+#include <cmath>
 #include <utility>
 
 Vector::Vector(int64_t coord_x, int64_t coord_y)
@@ -75,7 +76,7 @@ Segment::Segment(Point begin, Point end)
 
 Point Segment::GetA() const { return this->begin_; }
 Point Segment::GetB() const { return this->end_; }
-Vector Segment::GetDirection() const {
+Vector Segment::GetVector() const {
   return this->end_.ToVector() - this->begin_.ToVector();
 }
 
@@ -85,8 +86,8 @@ void Segment::Move(const Vector& my_vector) {
 }
 
 bool Segment::ContainsPoint(const Point& my_point) const {
-  return (this->GetDirection() ^
-          Segment(this->begin_, my_point).GetDirection()) == 0 &&
+  return (this->GetVector() ^ Segment(this->begin_, my_point).GetVector()) ==
+             0 &&
          this->begin_.GetX() <= my_point.GetX() &&
          my_point.GetX() <= this->end_.GetX() &&
          this->begin_.GetY() <= my_point.GetY() &&
@@ -118,3 +119,75 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
          other_cross_this_start * other_cross_this_end <= 0;
 }
 IShape* Segment::Clone() const { return new Segment(begin_, end_); }
+
+Line::Line(Point begin, const Point& end)
+    : begin_(std::move(begin)), direction_(end.ToVector() - begin.ToVector()) {}
+
+int64_t Line::GetA() const { return -direction_.GetY(); }
+int64_t Line::GetB() const { return direction_.GetX(); }
+int64_t Line::GetC() const {
+  return -direction_.GetX() * begin_.GetX() + direction_.GetY() * begin_.GetY();
+}
+Vector Line::GetVector() const { return direction_; }
+
+void Line::Move(const Vector& my_vector) { begin_.Move(my_vector); }
+bool Line::ContainsPoint(const Point& my_point) const {
+  return (direction_ ^ Line(this->begin_, my_point).GetVector()) == 0;
+}
+bool Line::CrossSegment(const Segment& my_segment) const {
+  return (direction_ ^ my_segment.GetVector()) != 0 ||
+         this->ContainsPoint(my_segment.GetA());
+}
+IShape* Line::Clone() const {
+  Point end = begin_;
+  end.Move(direction_);
+  return new Line(begin_, end);
+}
+
+Ray::Ray(Point begin, const Point& end)
+    : begin_(std::move(begin)), direction_(end.ToVector() - begin.ToVector()) {}
+
+Point Ray::GetA() const { return begin_; }
+Vector Ray::GetVector() const { return direction_; }
+
+void Ray::Move(const Vector& my_vector) { begin_.Move(my_vector); }
+bool Ray::ContainsPoint(const Point& my_point) const {
+  Point end = begin_;
+  end.Move(direction_ * Aminov::kVeryBig);
+  return Segment(begin_, end).ContainsPoint(my_point);
+}
+bool Ray::CrossSegment(const Segment& my_segment) const {
+  Point end = begin_;
+  end.Move(direction_ * Aminov::kVeryBig);
+  return Segment(begin_, end).CrossSegment(my_segment);
+}
+IShape* Ray::Clone() const {
+  Point end = begin_;
+  end.Move(direction_);
+  return new Ray(begin_, end);
+}
+
+Circle::Circle(Point center, std::size_t radius)
+    : center_(std::move(center)), radius_(radius) {}
+
+Point Circle::GetCentre() const { return center_; }
+std::size_t Circle::GetRadius() const { return radius_; }
+void Circle::Move(const Vector& my_vector) { center_.Move(my_vector); }
+bool Circle::ContainsPoint(const Point& my_point) const {
+  std::size_t distance =
+      (my_point.GetX() - center_.GetX()) * (my_point.GetX() - center_.GetX()) +
+      (my_point.GetY() - center_.GetY()) * (my_point.GetY() - center_.GetY());
+  return distance <= radius_ * radius_;
+}
+bool Circle::CrossSegment(const Segment& my_segment) const {
+  Point start = my_segment.GetA();
+  Point end = my_segment.GetB();
+  int64_t coefficient_a = end.GetY() - start.GetY();
+  int64_t coefficient_b = start.GetX() - end.GetX();
+  int64_t coefficient_C = end.GetX() * start.GetY() - start.GetX() * end.GetY();
+  return std::abs(coefficient_a * center_.GetX() +
+                  coefficient_b * center_.GetY() + coefficient_C) <=
+         radius_ * radius_ * coefficient_a * coefficient_a +
+             coefficient_b * coefficient_b;
+}
+IShape* Circle::Clone() const { return new Circle(center_, radius_); }
