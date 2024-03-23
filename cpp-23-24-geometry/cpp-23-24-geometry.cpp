@@ -92,6 +92,7 @@ bool Segment::ContainsPoint(const Point& my_point) const {
          this->begin_.GetY() <= my_point.GetY() &&
          my_point.GetY() <= this->end_.GetY();
 }
+
 bool Segment::CrossSegment(const Segment& my_segment) const {
   Vector this_vector(this->GetB().GetX() - this->GetA().GetX(),
                      this->GetB().GetY() - this->GetA().GetY());
