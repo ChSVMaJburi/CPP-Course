@@ -99,44 +99,42 @@ bool Segment::ContainsPoint(const Point& my_point) const {
 }
 
 bool Segment::CrossSegment(const Segment& my_segment) const {
-  int64_t cur_begin_x = begin_.GetX();
-  int64_t cur_begin_y = begin_.GetY();
-  int64_t cur_end_x = end_.GetX();
-  int64_t cur_end_y = end_.GetY();
-  int64_t other_begin_x = my_segment.GetA().GetX();
-  int64_t other_begin_y = my_segment.GetA().GetY();
-  int64_t other_end_x = my_segment.GetB().GetX();
-  int64_t other_end_y = my_segment.GetB().GetY();
+  int64_t this_x1 = begin_.GetX();
+  int64_t this_y1 = begin_.GetY();
+  int64_t this_x2 = end_.GetX();
+  int64_t this_y2 = end_.GetY();
+  int64_t seg_x1 = my_segment.GetA().GetX();
+  int64_t seg_y1 = my_segment.GetA().GetY();
+  int64_t seg_x2 = my_segment.GetB().GetX();
+  int64_t seg_y2 = my_segment.GetB().GetY();
 
-  int64_t dist1 =
-      ((other_end_x - other_begin_x) * (cur_begin_y - other_begin_y)) -
-      ((cur_begin_x - other_begin_x) * (other_end_y - other_begin_y));
-  int64_t dist2 =
-      ((other_end_x - other_begin_x) * (cur_end_y - other_begin_y)) -
-      ((cur_end_x - other_begin_x) * (other_end_y - other_begin_y));
-  int64_t dist3 = ((cur_end_x - cur_begin_x) * (other_begin_y - cur_begin_y)) -
-                  ((other_begin_x - cur_begin_x) * (cur_end_y - cur_begin_y));
-  int64_t dist4 = ((cur_end_x - cur_begin_x) * (other_end_y - cur_begin_y)) -
-                  ((other_end_x - cur_begin_x) * (cur_end_y - cur_begin_y));
+  int64_t dist1 = ((seg_x2 - seg_x1) * (this_y1 - seg_y1)) -
+                  ((this_x1 - seg_x1) * (seg_y2 - seg_y1));
+  int64_t dist2 = ((seg_x2 - seg_x1) * (this_y2 - seg_y1)) -
+                  ((this_x2 - seg_x1) * (seg_y2 - seg_y1));
+  int64_t dist3 = ((this_x2 - this_x1) * (seg_y1 - this_y1)) -
+                  ((seg_x1 - this_x1) * (this_y2 - this_y1));
+  int64_t dist4 = ((this_x2 - this_x1) * (seg_y2 - this_y1)) -
+                  ((seg_x2 - this_x1) * (this_y2 - this_y1));
 
   if ((dist1 < 0 && dist2 > 0 || dist1 > 0 && dist2 < 0) &&
       (dist3 < 0 && dist4 > 0 || dist3 > 0 && dist4 < 0)) {
     return true;
   }
-  if (dist1 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
-                              other_end_y, cur_begin_x, cur_begin_y)) {
+  if (dist1 == 0 &&
+      OnSegment(seg_x1, seg_y1, seg_x2, seg_y2, this_x1, this_y1)) {
     return true;
   }
-  if (dist2 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
-                              other_end_y, cur_end_x, cur_end_y)) {
+  if (dist2 == 0 &&
+      OnSegment(seg_x1, seg_y1, seg_x2, seg_y2, this_x2, this_y2)) {
     return true;
   }
-  if (dist3 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x, cur_end_y,
-                              other_begin_x, other_begin_y)) {
+  if (dist3 == 0 &&
+      OnSegment(this_x1, this_y1, this_x2, this_y2, seg_x1, seg_y1)) {
     return true;
   }
-  return (dist4 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x,
-                                  cur_end_y, other_end_x, other_end_y));
+  return (dist4 == 0 &&
+          OnSegment(this_x1, this_y1, this_x2, this_y2, seg_x2, seg_y2));
 }
 
 bool Segment::OnSegment(int64_t cur_begin_x, int64_t cur_begin_y,
