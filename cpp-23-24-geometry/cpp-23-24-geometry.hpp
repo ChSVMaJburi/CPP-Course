@@ -78,7 +78,7 @@ class Segment : public IShape {
   Point begin_;
   Point end_;
   bool OnSegment(int64_t cur_begin_x, int64_t cur_begin_y, int64_t cur_end_x,
-                 int64_t cur_end_y, int64_t px, int64_t py) const;
+                 int64_t cur_end_y, int64_t need_x, int64_t need_y) const;
 };
 
 class Line : public IShape {

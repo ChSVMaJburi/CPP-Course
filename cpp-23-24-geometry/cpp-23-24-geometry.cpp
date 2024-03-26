@@ -140,10 +140,10 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
 }
 
 bool Segment::OnSegment(int64_t cur_begin_x, int64_t cur_begin_y,
-                        int64_t cur_end_x, int64_t cur_end_y, int64_t px,
-                        int64_t py) const {
+                        int64_t cur_end_x, int64_t cur_end_y, int64_t need_x,
+                        int64_t need_y) const {
   return Segment(Point(cur_begin_x, cur_begin_y), Point(cur_end_x, cur_end_y))
-      .ContainsPoint(Point(px, py));
+      .ContainsPoint(Point(need_x, need_y));
 }
 
 IShape* Segment::Clone() const { return new Segment(begin_, end_); }
