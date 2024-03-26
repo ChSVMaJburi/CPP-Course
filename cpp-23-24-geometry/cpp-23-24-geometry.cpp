@@ -213,7 +213,7 @@ bool Circle::CrossSegment(const Segment& my_segment) const {
   int64_t coefficient_c = end.GetX() * start.GetY() - start.GetX() * end.GetY();
   return std::abs(coefficient_a * center_.GetX() +
                   coefficient_b * center_.GetY() + coefficient_c) <=
-         static_cast<int64_t>(radius_) * static_cast<int64_t>(radius_)s *
+         static_cast<int64_t>(radius_) * static_cast<int64_t>(radius_) *
                  coefficient_a * coefficient_a +
              coefficient_b * coefficient_b;
 }
