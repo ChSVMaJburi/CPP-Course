@@ -62,7 +62,8 @@ int64_t Point::DistanceToSegment(const Segment& my_segment) const {
     return std::min(segment_ca.LengthSq(), segment_cb.LengthSq());
   }
   return (my_segment.GetVector() ^ segment_ca.GetVector()) *
-         (my_segment.GetVector() ^ segment_ca.GetVector()) / my_segment.LengthSq();
+         (my_segment.GetVector() ^ segment_ca.GetVector()) /
+         my_segment.LengthSq();
 }
 
 Vector operator-(const Point& first, const Point& second) {
