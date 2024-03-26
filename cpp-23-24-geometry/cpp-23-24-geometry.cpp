@@ -122,26 +122,26 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
     return true;
   }
   if (dist1 == 0 &&
-      OnSegment(seg_x1, seg_y1, seg_x2, seg_y2, this_x1, this_y1)) {
+      OnSegment(seg_x1, seg_y1, seg_x2, seg_y2, Point(this_x1, this_y1))) {
     return true;
   }
   if (dist2 == 0 &&
-      OnSegment(seg_x1, seg_y1, seg_x2, seg_y2, this_x2, this_y2)) {
+      OnSegment(seg_x1, seg_y1, seg_x2, seg_y2, Point(this_x2, this_y2))) {
     return true;
   }
   if (dist3 == 0 &&
-      OnSegment(this_x1, this_y1, this_x2, this_y2, seg_x1, seg_y1)) {
+      OnSegment(this_x1, this_y1, this_x2, this_y2, Point(seg_x1, seg_y1))) {
     return true;
   }
   return (dist4 == 0 &&
-          OnSegment(this_x1, this_y1, this_x2, this_y2, seg_x2, seg_y2));
+          OnSegment(this_x1, this_y1, this_x2, this_y2, Point(seg_x2, seg_y2)));
 }
 
 bool Segment::OnSegment(int64_t cur_begin_x, int64_t cur_begin_y,
-                        int64_t cur_end_x, int64_t cur_end_y, int64_t need_x,
-                        int64_t need_y) {
+                        int64_t cur_end_x, int64_t cur_end_y,
+                        const Point& need) {
   return Segment(Point(cur_begin_x, cur_begin_y), Point(cur_end_x, cur_end_y))
-      .ContainsPoint(Point(need_x, need_y));
+      .ContainsPoint(need);
 }
 
 IShape* Segment::Clone() const { return new Segment(begin_, end_); }
