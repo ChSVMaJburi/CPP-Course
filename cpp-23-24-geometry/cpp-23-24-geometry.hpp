@@ -1,7 +1,7 @@
 #include <cstdint>
 
 namespace aminov {
-const int64_t kVeryBig = 1e9 + 7;
+const int64_t kVeryBig = 1e7 + 7;
 }
 
 class Vector {
@@ -48,12 +48,12 @@ class Point : public IShape {
   int64_t GetX() const;
   int64_t GetY() const;
   Vector ToVector() const;
+  int64_t DistanceToSegment(const Segment& my_segment) const;
 
   void Move(const Vector& my_vector) override;
   bool ContainsPoint(const Point& my_point) const override;
   bool CrossSegment(const Segment& my_segment) const override;
   IShape* Clone() const override;
-
  private:
   int64_t coord_x_;
   int64_t coord_y_;
@@ -68,7 +68,7 @@ class Segment : public IShape {
   Point GetA() const;
   Point GetB() const;
   Vector GetVector() const;
-
+  int64_t LengthSq() const;
   void Move(const Vector& my_vector) override;
   bool ContainsPoint(const Point& my_point) const override;
   bool CrossSegment(const Segment& my_segment) const override;
