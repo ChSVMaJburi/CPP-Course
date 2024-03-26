@@ -122,17 +122,21 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
   if ((dist1 < 0 && dist2 > 0 || dist1 > 0 && dist2 < 0) &&
       (dist3 < 0 && dist4 > 0 || dist3 > 0 && dist4 < 0)) {
     return true;
-  } else if (dist1 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
-                                     other_end_y, cur_begin_x, cur_begin_y)) {
+  }
+  if (dist1 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
+                              other_end_y, cur_begin_x, cur_begin_y)) {
     return true;
-  } else if (dist2 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
-                                     other_end_y, cur_end_x, cur_end_y)) {
+  }
+  if (dist2 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
+                              other_end_y, cur_end_x, cur_end_y)) {
     return true;
-  } else if (dist3 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x,
-                                     cur_end_y, other_begin_x, other_begin_y)) {
+  }
+  if (dist3 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x, cur_end_y,
+                              other_begin_x, other_begin_y)) {
     return true;
-  } else if (dist4 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x,
-                                     cur_end_y, other_end_x, other_end_y)) {
+  }
+  if (dist4 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x, cur_end_y,
+                              other_end_x, other_end_y)) {
     return true;
   }
 
@@ -141,7 +145,7 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
 
 bool Segment::OnSegment(int64_t cur_begin_x, int64_t cur_begin_y,
                         int64_t cur_end_x, int64_t cur_end_y, int64_t need_x,
-                        int64_t need_y) const {
+                        int64_t need_y) {
   return Segment(Point(cur_begin_x, cur_begin_y), Point(cur_end_x, cur_end_y))
       .ContainsPoint(Point(need_x, need_y));
 }
@@ -212,9 +216,9 @@ bool Circle::CrossSegment(const Segment& my_segment) const {
   Point end = my_segment.GetB();
   int64_t coefficient_a = end.GetY() - start.GetY();
   int64_t coefficient_b = start.GetX() - end.GetX();
-  int64_t coefficient_C = end.GetX() * start.GetY() - start.GetX() * end.GetY();
+  int64_t coefficient_c = end.GetX() * start.GetY() - start.GetX() * end.GetY();
   return std::abs(coefficient_a * center_.GetX() +
-                  coefficient_b * center_.GetY() + coefficient_C) <=
+                  coefficient_b * center_.GetY() + coefficient_c) <=
          radius_ * radius_ * coefficient_a * coefficient_a +
              coefficient_b * coefficient_b;
 }
