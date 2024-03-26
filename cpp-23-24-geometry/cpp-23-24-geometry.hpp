@@ -54,6 +54,7 @@ class Point : public IShape {
   bool ContainsPoint(const Point& my_point) const override;
   bool CrossSegment(const Segment& my_segment) const override;
   IShape* Clone() const override;
+
  private:
   int64_t coord_x_;
   int64_t coord_y_;
