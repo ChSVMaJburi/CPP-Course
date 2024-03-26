@@ -1,6 +1,6 @@
 #include <cstdint>
 
-namespace Aminov {
+namespace aminov {
 const int64_t kVeryBig = 1e9 + 7;
 }
 
@@ -77,7 +77,8 @@ class Segment : public IShape {
  private:
   Point begin_;
   Point end_;
-  bool OnSegment(int64_t x1, int64_t y1, int64_t x2, int64_t y2, int64_t px, int64_t py) const;
+  bool OnSegment(int64_t cur_begin_x, int64_t cur_begin_y, int64_t cur_end_x,
+                 int64_t cur_end_y, int64_t px, int64_t py) const;
 };
 
 class Line : public IShape {

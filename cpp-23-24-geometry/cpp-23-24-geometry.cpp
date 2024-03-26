@@ -181,12 +181,12 @@ Vector Ray::GetVector() const { return direction_; }
 void Ray::Move(const Vector& my_vector) { begin_.Move(my_vector); }
 bool Ray::ContainsPoint(const Point& my_point) const {
   Point end = begin_;
-  end.Move(direction_ * Aminov::kVeryBig);
+  end.Move(direction_ * aminov::kVeryBig);
   return Segment(begin_, end).ContainsPoint(my_point);
 }
 bool Ray::CrossSegment(const Segment& my_segment) const {
   Point end = begin_;
-  end.Move(direction_ * Aminov::kVeryBig);
+  end.Move(direction_ * aminov::kVeryBig);
   return Segment(begin_, end).CrossSegment(my_segment);
 }
 IShape* Ray::Clone() const {
