@@ -55,11 +55,13 @@ int64_t Point::GetX() const { return this->coord_x_; }
 int64_t Point::GetY() const { return this->coord_y_; }
 Vector Point::ToVector() const { return {this->GetX(), this->GetY()}; }
 int64_t Point::DistanceToSegment(const Segment& my_segment) const {
-  Segment segment_ca(*this, my_segment.GetA());
-  Segment segment_cb(*this, my_segment.GetB());
-  if (segment_ca.GetVector() * my_segment.GetVector() <= 0 ||
-      segment_cb.GetVector() * my_segment.GetVector() <= 0) {
-    return std::min(segment_ca.LengthSq(), segment_cb.LengthSq());
+  Segment segment_ca(my_segment.GetA(), *this);
+  Segment segment_cb(my_segment.GetB(), *this);
+  if (my_segment.GetVector() * segment_ca.GetVector() <= 0 ||
+      (-my_segment.GetVector()) * segment_cb.GetVector() <= 0) {
+    return my_segment.GetVector() * segment_ca.GetVector() <= 0
+               ? segment_ca.LengthSq()
+               : segment_cb.LengthSq();
   }
   return (my_segment.GetVector() ^ segment_ca.GetVector()) *
          (my_segment.GetVector() ^ segment_ca.GetVector()) /
@@ -231,4 +233,5 @@ bool Circle::CrossSegment(const Segment& my_segment) const {
   int64_t dist_to_b = Segment(my_segment.GetB(), center_).LengthSq();
   return std::max(dist_to_a, dist_to_b) >= (int64_t)radius_ * (int64_t)radius_;
 }
+
 IShape* Circle::Clone() const { return new Circle(center_, radius_); }
