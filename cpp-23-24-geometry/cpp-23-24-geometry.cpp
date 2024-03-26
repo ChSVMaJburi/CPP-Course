@@ -55,14 +55,14 @@ int64_t Point::GetX() const { return this->coord_x_; }
 int64_t Point::GetY() const { return this->coord_y_; }
 Vector Point::ToVector() const { return {this->GetX(), this->GetY()}; }
 int64_t Point::DistanceToSegment(const Segment& my_segment) const {
-  Segment ca(*this, my_segment.GetA());
-  Segment cb(*this, my_segment.GetB());
-  if (ca.GetVector() * my_segment.GetVector() <= 0 ||
-      cb.GetVector() * my_segment.GetVector() <= 0) {
-    return std::min(ca.LengthSq(), cb.LengthSq());
+  Segment segment_ca(*this, my_segment.GetA());
+  Segment segment_cb(*this, my_segment.GetB());
+  if (segment_ca.GetVector() * my_segment.GetVector() <= 0 ||
+      segment_cb.GetVector() * my_segment.GetVector() <= 0) {
+    return std::min(segment_ca.LengthSq(), segment_cb.LengthSq());
   }
-  return (my_segment.GetVector() ^ ca.GetVector()) *
-         (my_segment.GetVector() ^ ca.GetVector()) / my_segment.LengthSq();
+  return (my_segment.GetVector() ^ segment_ca.GetVector()) *
+         (my_segment.GetVector() ^ segment_ca.GetVector()) / my_segment.LengthSq();
 }
 
 Vector operator-(const Point& first, const Point& second) {
