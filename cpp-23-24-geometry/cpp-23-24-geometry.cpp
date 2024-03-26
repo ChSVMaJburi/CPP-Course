@@ -1,5 +1,6 @@
 #include "cpp-23-24-geometry.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <utility>
 
@@ -55,6 +56,9 @@ int64_t Point::GetX() const { return this->coord_x_; }
 int64_t Point::GetY() const { return this->coord_y_; }
 Vector Point::ToVector() const { return {this->GetX(), this->GetY()}; }
 
+Vector operator-(const Point& first, const Point& second) {
+  return {first.GetX() - second.GetX(), first.GetY() - second.GetY()};
+}
 bool operator==(const Point& first, const Point& second) {
   return first.GetX() == second.GetX() && first.GetY() == second.GetY();
 }
@@ -88,36 +92,60 @@ void Segment::Move(const Vector& my_vector) {
 bool Segment::ContainsPoint(const Point& my_point) const {
   return (this->GetVector() ^ Segment(this->begin_, my_point).GetVector()) ==
              0 &&
-         this->begin_.GetX() <= my_point.GetX() &&
-         my_point.GetX() <= this->end_.GetX() &&
-         this->begin_.GetY() <= my_point.GetY() &&
-         my_point.GetY() <= this->end_.GetY();
+         std::min(this->begin_.GetX(), this->end_.GetX()) <= my_point.GetX() &&
+         my_point.GetX() <= std::max(this->begin_.GetX(), this->end_.GetX()) &&
+         std::min(this->begin_.GetY(), this->end_.GetY()) <= my_point.GetY() &&
+         my_point.GetY() <= std::max(this->begin_.GetY(), this->end_.GetY());
 }
 
 bool Segment::CrossSegment(const Segment& my_segment) const {
-  Vector this_vector(this->GetB().GetX() - this->GetA().GetX(),
-                     this->GetB().GetY() - this->GetA().GetY());
-  Vector other_vector(my_segment.GetB().GetX() - my_segment.GetA().GetX(),
-                      my_segment.GetB().GetY() - my_segment.GetA().GetY());
+  int64_t cur_begin_x = begin_.GetX();
+  int64_t cur_begin_y = begin_.GetY();
+  int64_t cur_end_x = end_.GetX();
+  int64_t cur_end_y = end_.GetY();
+  int64_t other_begin_x = my_segment.GetA().GetX();
+  int64_t other_begin_y = my_segment.GetA().GetY();
+  int64_t other_end_x = my_segment.GetB().GetX();
+  int64_t other_end_y = my_segment.GetB().GetY();
 
-  Vector this_to_other(this->GetA().GetX() - my_segment.GetA().GetX(),
-                       this->GetA().GetY() - my_segment.GetA().GetY());
+  int64_t dist1 =
+      ((other_end_x - other_begin_x) * (cur_begin_y - other_begin_y)) -
+      ((cur_begin_x - other_begin_x) * (other_end_y - other_begin_y));
+  int64_t dist2 =
+      ((other_end_x - other_begin_x) * (cur_end_y - other_begin_y)) -
+      ((cur_end_x - other_begin_x) * (other_end_y - other_begin_y));
+  int64_t dist3 = ((cur_end_x - cur_begin_x) * (other_begin_y - cur_begin_y)) -
+                  ((other_begin_x - cur_begin_x) * (cur_end_y - cur_begin_y));
+  int64_t dist4 = ((cur_end_x - cur_begin_x) * (other_end_y - cur_begin_y)) -
+                  ((other_end_x - cur_begin_x) * (cur_end_y - cur_begin_y));
 
-  int64_t this_cross_other_start = this_vector ^ this_to_other;
-  int64_t this_cross_other_end =
-      this_vector ^ Vector(my_segment.GetB().GetX() - this->GetA().GetX(),
-                           my_segment.GetB().GetY() - this->GetA().GetY());
-  int64_t other_cross_this_start =
-      other_vector ^ Vector(this->GetB().GetX() - my_segment.GetA().GetX(),
-                            this->GetB().GetY() - my_segment.GetA().GetY());
-  int64_t other_cross_this_end =
-      other_vector ^
-      Vector(my_segment.GetB().GetX() - my_segment.GetA().GetX(),
-             my_segment.GetB().GetY() - my_segment.GetA().GetY());
+  if ((dist1 < 0 && dist2 > 0 || dist1 > 0 && dist2 < 0) &&
+      (dist3 < 0 && dist4 > 0 || dist3 > 0 && dist4 < 0)) {
+    return true;
+  } else if (dist1 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
+                                     other_end_y, cur_begin_x, cur_begin_y)) {
+    return true;
+  } else if (dist2 == 0 && OnSegment(other_begin_x, other_begin_y, other_end_x,
+                                     other_end_y, cur_end_x, cur_end_y)) {
+    return true;
+  } else if (dist3 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x,
+                                     cur_end_y, other_begin_x, other_begin_y)) {
+    return true;
+  } else if (dist4 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x,
+                                     cur_end_y, other_end_x, other_end_y)) {
+    return true;
+  }
 
-  return this_cross_other_start * this_cross_other_end <= 0 &&
-         other_cross_this_start * other_cross_this_end <= 0;
+  return false;
 }
+
+bool Segment::OnSegment(int64_t cur_begin_x, int64_t cur_begin_y,
+                        int64_t cur_end_x, int64_t cur_end_y, int64_t px,
+                        int64_t py) const {
+  return Segment(Point(cur_begin_x, cur_begin_y), Point(cur_end_x, cur_end_y))
+      .ContainsPoint(Point(px, py));
+}
+
 IShape* Segment::Clone() const { return new Segment(begin_, end_); }
 
 Line::Line(Point begin, const Point& end)

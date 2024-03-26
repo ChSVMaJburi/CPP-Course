@@ -58,7 +58,7 @@ class Point : public IShape {
   int64_t coord_x_;
   int64_t coord_y_;
 };
-
+Vector operator-(const Point& first, const Point& second);
 bool operator==(const Point& first, const Point& second);
 
 class Segment : public IShape {
@@ -77,6 +77,7 @@ class Segment : public IShape {
  private:
   Point begin_;
   Point end_;
+  bool OnSegment(int64_t x1, int64_t y1, int64_t x2, int64_t y2, int64_t px, int64_t py) const;
 };
 
 class Line : public IShape {
