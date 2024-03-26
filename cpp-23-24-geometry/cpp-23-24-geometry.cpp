@@ -224,11 +224,11 @@ bool Circle::ContainsPoint(const Point& my_point) const {
 }
 bool Circle::CrossSegment(const Segment& my_segment) const {
   int64_t dist = center_.DistanceToSegment(my_segment);
-  if (dist > radius_ * radius_) {
+  if (dist > (int64_t)radius_ * (int64_t)radius_) {
     return false;
   }
   int64_t dist_to_a = Segment(my_segment.GetA(), center_).LengthSq();
   int64_t dist_to_b = Segment(my_segment.GetB(), center_).LengthSq();
-  return std::max(dist_to_a, dist_to_b) >= radius_ * radius_;
+  return std::max(dist_to_a, dist_to_b) >= (int64_t)radius_ * (int64_t)radius_;
 }
 IShape* Circle::Clone() const { return new Circle(center_, radius_); }
