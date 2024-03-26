@@ -135,12 +135,8 @@ bool Segment::CrossSegment(const Segment& my_segment) const {
                               other_begin_x, other_begin_y)) {
     return true;
   }
-  if (dist4 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x, cur_end_y,
-                              other_end_x, other_end_y)) {
-    return true;
-  }
-
-  return false;
+  return (dist4 == 0 && OnSegment(cur_begin_x, cur_begin_y, cur_end_x,
+                                  cur_end_y, other_end_x, other_end_y));
 }
 
 bool Segment::OnSegment(int64_t cur_begin_x, int64_t cur_begin_y,
