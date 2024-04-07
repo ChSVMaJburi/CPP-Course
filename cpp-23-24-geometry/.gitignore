@@ -2,3 +2,7 @@ test_fixtures.hpp
 main.cpp
 CMakeLists.txt
 googletest
+cmake-build-debug
+.idea
+main.cpp
+test_fixtures.hpp

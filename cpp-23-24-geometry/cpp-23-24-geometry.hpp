@@ -1,16 +1,15 @@
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
-
-namespace aminov {
-const int64_t kVeryBig = 1e7 + 7;
-}
+#include <utility>
 
 class Vector {
  public:
   Vector(int64_t coord_x, int64_t coord_y);
-  Vector();
-
+  Vector() = default;
   int64_t GetX() const;
   int64_t GetY() const;
+  int64_t LengthSq() const;
 
   Vector& operator*=(int64_t num);
   Vector& operator+=(const Vector& second);
@@ -21,6 +20,7 @@ class Vector {
   int64_t coord_y_;
 };
 
+bool operator==(const Vector& first, const Vector& second);
 int64_t operator*(const Vector& first, const Vector& second);
 int64_t operator^(const Vector& first, const Vector& second);
 Vector operator+(const Vector& first, const Vector& second);
@@ -47,7 +47,7 @@ class Point : public IShape {
 
   int64_t GetX() const;
   int64_t GetY() const;
-  Vector ToVector() const;
+  Vector GetVector() const;
   int64_t DistanceToSegment(const Segment& my_segment) const;
 
   void Move(const Vector& my_vector) override;
@@ -118,6 +118,7 @@ class Ray : public IShape {
   Point begin_;
   Vector direction_;
 };
+bool operator==(const Ray& first, const Ray& second);
 
 class Circle : public IShape {
  public:
