@@ -122,7 +122,7 @@ bool operator==(const Ray& first, const Ray& second);
 
 class Circle : public IShape {
  public:
-  Circle(Point center, std::size_t radius);
+  Circle(const Point& center, std::size_t radius);
 
   Point GetCentre() const;
   std::size_t GetRadius() const;
