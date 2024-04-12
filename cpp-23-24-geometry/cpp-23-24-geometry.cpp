@@ -187,11 +187,7 @@ bool Line::CrossSegment(const Segment& my_segment) const {
          0;
 }
 
-IShape* Line::Clone() const {
-  Point end = begin_;
-  end.Move(direction_);
-  return new Line(begin_, end);
-}
+IShape* Line::Clone() const { return new Line(*this); }
 
 Ray::Ray(const Point& begin, const Point& end)
     : begin_(begin), direction_(end.GetVector() - begin.GetVector()) {}
@@ -238,13 +234,13 @@ bool Circle::ContainsPoint(const Point& my_point) const {
 }
 bool Circle::CrossSegment(const Segment& my_segment) const {
   int64_t dist = center_.DistanceToSegment(my_segment);
-  if (dist > static_cast<int64_t>(radius_) * static_cast<int64_t>(radius_)) {
+  if (dist > static_cast<int64_t>(radius_ * radius_)) {
     return false;
   }
   int64_t dist_to_a = Segment(my_segment.GetA(), center_).LengthSq();
   int64_t dist_to_b = Segment(my_segment.GetB(), center_).LengthSq();
   return std::max(dist_to_a, dist_to_b) >=
-         static_cast<int64_t>(radius_) * static_cast<int64_t>(radius_);
+         static_cast<int64_t>(radius_ * radius_);
 }
 
 IShape* Circle::Clone() const { return new Circle(center_, radius_); }
