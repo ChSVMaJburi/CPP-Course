@@ -64,7 +64,7 @@ bool operator==(const Point& first, const Point& second);
 
 class Segment : public IShape {
  public:
-  Segment(Point begin, Point end);
+  Segment(const Point& begin, const Point& end);
 
   Point GetA() const;
   Point GetB() const;
@@ -85,7 +85,7 @@ class Segment : public IShape {
 
 class Line : public IShape {
  public:
-  Line(Point begin, const Point& end);
+  Line(const Point& begin, const Point& end);
 
   int64_t GetA() const;
   int64_t GetB() const;
@@ -104,7 +104,7 @@ class Line : public IShape {
 
 class Ray : public IShape {
  public:
-  Ray(Point begin, const Point& end);
+  Ray(const Point& begin, const Point& end);
 
   Point GetA() const;
   Vector GetVector() const;
