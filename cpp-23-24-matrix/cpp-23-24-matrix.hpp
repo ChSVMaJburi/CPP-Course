@@ -140,7 +140,7 @@ Matrix<N, K, T> operator*(const Matrix<N, M, T>& first,
   for (size_t i = 0; i < N; ++i) {
     for (size_t j = 0; j < K; ++j) {
       T sum = 0;
-      for (size_t k = 0; k < N; ++k) {
+      for (size_t k = 0; k < M; ++k) {
         sum += first(i, k) * second(k, j);
       }
       result(i, j) = sum;
