@@ -39,8 +39,12 @@ class Matrix {
     return Matrix<M, N, T>(other);
   }
 
-  T& operator()(size_t i, size_t j) { return data_[i][j]; }
-  T operator()(size_t i, size_t j) const { return data_[i][j]; }
+  T& operator()(size_t first_index, size_t second_index) {
+    return data_[first_index][second_index];
+  }
+  T operator()(size_t first_index, size_t second_index) const {
+    return data_[first_index][second_index];
+  }
 
  private:
   std::vector<std::vector<T>> data_;
@@ -96,8 +100,12 @@ class Matrix<N, N, T> {
     return ans;
   }
 
-  T& operator()(size_t i, size_t j) { return data_[i][j]; }
-  T operator()(size_t i, size_t j) const { return data_[i][j]; }
+  T& operator()(size_t first_index, size_t second_index) {
+    return data_[first_index][second_index];
+  }
+  T operator()(size_t first_index, size_t second_index) const {
+    return data_[first_index][second_index];
+  }
 
  private:
   std::vector<std::vector<T>> data_;
