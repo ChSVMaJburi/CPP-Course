@@ -6,18 +6,12 @@
 template <size_t N, size_t M, typename T = int64_t>
 class Matrix {
  public:
-  Matrix() { data_.resize(N, std::vector<T>(M, T())); }
-  Matrix(const std::vector<std::vector<T>>& other) { data_ = other; }
-  Matrix(const T& elem) { data_.resize(N, std::vector<T>(M, elem)); }
+  Matrix() : data_(std::vector<std::vector<T>>(N, std::vector<T>(M, T()))) {}
+  Matrix(const std::vector<std::vector<T>>& other) : data_(other) {}
+  Matrix(const T& elem)
+      : data_(std::vector<std::vector<T>>(N, std::vector<T>(M, elem))) {}
 
-  Matrix<N, M, T>& operator+=(const Matrix<N, M, T>& other) {
-    for (size_t i = 0; i < N; ++i) {
-      for (size_t j = 0; j < M; ++j) {
-        data_[i][j] += other(i, j);
-      }
-    }
-    return *this;
-  }
+  Matrix<N, M, T>& operator+=(const Matrix<N, M, T>& other);
   Matrix<N, M, T>& operator-=(const Matrix<N, M, T>& other) {
     for (size_t i = 0; i < N; ++i) {
       for (size_t j = 0; j < M; ++j) {
@@ -55,9 +49,10 @@ class Matrix {
 template <size_t N, typename T>
 class Matrix<N, N, T> {
  public:
-  Matrix() { data_.resize(N, std::vector<T>(N, T())); }
-  Matrix(const std::vector<std::vector<T>>& other) { data_ = other; }
-  Matrix(const T& elem) { data_.resize(N, std::vector<T>(N, elem)); }
+  Matrix() : data_(std::vector<std::vector<T>>(N, std::vector<T>(N, T()))) {}
+  Matrix(const std::vector<std::vector<T>>& other) : data_(other) {}
+  Matrix(const T& elem)
+      : data_(std::vector<std::vector<T>>(N, std::vector<T>(N, elem))) {}
 
   Matrix<N, N, T>& operator+=(const Matrix<N, N, T>& other) {
     for (size_t i = 0; i < N; ++i) {
