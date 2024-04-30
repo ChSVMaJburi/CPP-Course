@@ -85,7 +85,7 @@ Matrix<N, K, T> operator*(const Matrix<N, M, T>& first,
       result(i, j) = sum;
     }
   }
-  return Matrix(result);
+  return result;
 }
 template <size_t N, size_t M, typename T>
 Matrix<N, M, T>& Matrix<N, M, T>::operator+=(const Matrix<N, M, T>& other) {
@@ -117,13 +117,13 @@ Matrix<N, M, T>& Matrix<N, M, T>::operator*=(const T& elem) {
 
 template <size_t N, size_t M, typename T>
 Matrix<M, N, T> Matrix<N, M, T>::Transposed() {
-  std::vector<std::vector<T>> other(M, std::vector<T>(N));
+  Matrix<M, N, T> other(std::vector<std::vector<T>>(M, std::vector<T>(N)));
   for (size_t i = 0; i < N; ++i) {
     for (size_t j = 0; j < M; ++j) {
-      other[j][i] = data_[i][j];
+      other(j, i) = data_[i][j];
     }
   }
-  return Matrix<M, N, T>(other);
+  return other;
 }
 template <size_t N, typename T>
 T Matrix<N, N, T>::Trace() const {
@@ -172,15 +172,14 @@ Matrix<N, N, T>& Matrix<N, N, T>::operator*=(const T& elem) {
 
 template <size_t N, typename T>
 Matrix<N, N, T> Matrix<N, N, T>::Transposed() {
-  std::vector<std::vector<T>> other(N, std::vector<T>(N));
+  Matrix<N, N, T> other(data_);
   for (size_t i = 0; i < N; ++i) {
     for (size_t j = 0; j < N; ++j) {
-      other[j][i] = data_[i][j];
+      other(j, i) = data_[i][j];
     }
   }
-  return Matrix<N, N, T>(other);
+  return other;
 }
-
 template <size_t N, typename T>
 T& Matrix<N, N, T>::operator()(size_t first_index, size_t second_index) {
   return data_[first_index][second_index];
